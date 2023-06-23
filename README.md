@@ -1,2 +1,64 @@
-# text-adventure
-Text adventure game in python for first big programming thing I've done. woohoo
+This is a text adventure designed for solo python use.
+This is my first big big project doing python (not really that far into learning yet) so is relatively basic on the scale of things.
+Have fun using it! Assuming I set the permissions correctly.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://youtube.com/watch?v=dQw4w9WgXcQ
