@@ -66,33 +66,29 @@ def book_room_examine(obj_examine):
     else:
         print("You can't examine that.")
         time.sleep(1)
-"""
-def book_room_door_interact(door_interact):
-    if door_interact == False:
+        
+def book_room_door_interact(door_interact_state):
+    if door_interact_state == False:
         print("You open the door wider, giving you a clear view of the corridor ahead.")
         time.sleep(1)
         print("Even though you already could've gone through it.")
         time.sleep(1)
-        door_interact = True
-        return door_interact
     else:
         print("You close the door back to where it was originally.")
         time.sleep(1)
         door_interact = False
         return door_interact
 
-def book_room_bookshelf(bookshelf_interact):
-    if bookshelf_interact == False:
+def book_room_bookshelf(bookshelf_interact_state):
+    if bookshelf_interact_state == False:
         print("You take a book from one of the shelves, hoping it might be useful.")
         time.sleep(1)
-        global bookshelf_interact_state
-        bookshelf_interact_state = True
         add_inventory("book")
         return bookshelf_interact
     else:
         print("You have no need for another book.")
         time.sleep(1)
-"""
+
 def hole_ending_sequence():
     global ending_condition
     print("You jump in the hole, falling forever and ever.")
@@ -202,7 +198,7 @@ def examine(room):
     elif room == "one_one_corridor":
         obj_examine = input("What object would you like to examine?: ")
         one_one_corridor_examine(obj_examine)
-"""
+
 def interact(room):
     obj_interact = input("What would you like to interact with?: ")
     if room == "lobby":
@@ -212,15 +208,23 @@ def interact(room):
         else:
             print("You can't interact with that.")
     elif room == "book_room":
+        """
         if obj_interact == "door":
             book_room_door_interact(door_interact_state)
+            if door_interact_state == True:
+                door_interact_state == False
+            else:
+                door_interact_state = True
         elif obj_interact == "bookshelf":
             book_room_bookshelf(bookshelf_interact_state)
-        elif obj_interact == "hole":
+            bookshelf_interact_state = True
+            return bookshelf_interact_state
+        """
+        if obj_interact == "hole":
             hole_ending_sequence()
         else:
             print("You can't interact with that. ")
-"""
+
 def inventory_general():
     choice = input("View or drop item from inventory?: ")
     if choice == "view":
@@ -280,9 +284,8 @@ def repeated_action(x, y, newx, newy):
         move(x, y, room)
     elif action == "examine":
         examine(room)
-"""    elif action == "interact":
+    elif action == "interact":
         interact(room)
-"""
     elif action == "inventory":
         inventory_general()
     
