@@ -34,8 +34,9 @@ def book_room():
     print("There is a large hole at your south-east.")
 
 def bookshelf_sequence():
-    print("Test bookshelf")
+    print("It's a bookshelf.")
     time.sleep(1)
+    print("If you examined it, there may be more to it.")
 
 def corner_hole():
     print("The infinite hole.")
@@ -89,6 +90,12 @@ def book_room_bookshelf(bookshelf_interact_state):
         print("You have no need for another book.")
         time.sleep(1)
 
+def book_room_wall(wall_counter):
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("It's still cold.")
+    time.sleep(1)
+
 def hole_ending_sequence():
     global ending_condition
     print("You jump in the hole, falling forever and ever.")
@@ -108,6 +115,14 @@ def one_one_corridor():
     time.sleep(1)
     print("There is no sign of anything useful in this space.")
     time.sleep(1)
+
+def one_one_wall(wall_counter):
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Why do you keep doing this?")
+    time.sleep(1)
+    wall_counter = wall_counter + 1
+    return wall_counter
 
 def one_one_corridor_examine(obj_examine):
     if obj_examine == "door":
@@ -208,7 +223,8 @@ def interact(room):
         else:
             print("You can't interact with that.")
     elif room == "book_room":
-        """
+        global door_interact_state
+        global bookshelf_interact_state
         if obj_interact == "door":
             book_room_door_interact(door_interact_state)
             if door_interact_state == True:
@@ -219,11 +235,16 @@ def interact(room):
             book_room_bookshelf(bookshelf_interact_state)
             bookshelf_interact_state = True
             return bookshelf_interact_state
-        """
-        if obj_interact == "hole":
+        elif obj_interact == "hole":
             hole_ending_sequence()
+        elif obj_interact == "wall":
+            book_room_wall()
         else:
-            print("You can't interact with that. ")
+            print("You can't interact with that.")
+    elif room == "one_one_corridor":
+        if obj_interact == "wall":
+            one_one_wall()
+            
 
 def inventory_general():
     choice = input("View or drop item from inventory?: ")
@@ -246,9 +267,10 @@ def add_inventory(item):
 def drop_item(item):
     for x in inventory:
         if item == x:
-            inventory.pop(item)
+            inventory.remove(item)
             print("Dropped", item, "from inventory!")
             time.sleep(1)
+            break
         else:
             pass
     print("You do not have this item.")
