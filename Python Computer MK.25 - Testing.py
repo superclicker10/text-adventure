@@ -4,7 +4,7 @@ import webbrowser
 from location import *
 from locations import *
 
-restricted_pos = ["01", "20", "21"]
+restricted_pos = ["01", "02", "20", "21", "22"]
 game_on = False
 x, newx = 0, 0
 y, newy = 0, 0
@@ -14,7 +14,7 @@ ending_condition = False
 door_interact_state = False
 bookshelf_interact_state = False
 wall_counter = 0
-lobby_wall, bookshelf_wall, one_one_wall_done = False, False, False
+lobby_wall, bookshelf_wall, one_one_wall_done, one_two_wall_done = False, False, False, False
 
 def lobby_sequence():
     global room
@@ -153,6 +153,34 @@ def one_one_corridor_examine(obj_examine):
         print("You can't examine that.")
         time.sleep(1)
 
+def one_one_southedge():
+    print("This is the door at your south edge.")
+    time.sleep(1)
+    print("It leads back to the bookshelf room you just came from.")
+    time.sleep(1)
+
+def one_two_corridor():
+    global room
+    room = "one_two_corridor"
+    print("You are further along in the corridor.")
+    time.sleep(1)
+    print("The door is behind you by another space.")
+    time.sleep(1)
+    print("There is a door leading to a bigger area north of you.")
+    time.sleep(1)
+
+def one_two_wall():
+    global wall_counter
+    global one_two_wall_done
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("What are you getting out of this?")
+    time.sleep(1)
+    if one_two_wall_done == False:
+        wall_counter = wall_counter + 1
+    one_two_wall_done = True
+    return wall_counter, one_two_wall_done
+
 def oob(x, y, newx, newy):
     if newx <= -1 or newy <= -1:
         print("All negative co-ordinates are out of bounds.")
@@ -217,6 +245,8 @@ def move(x, y, room):
                 bookshelf_sequence()
             elif edge == "south-east":
                 corner_hole()
+        elif room == "one_one_corridor":
+            one_one_southedge()
         else:
             print("There are no edges to move to in this room.")
 
@@ -266,6 +296,15 @@ def interact(room):
     elif room == "one_one_corridor":
         if obj_interact == "wall":
             one_one_wall()
+        else:
+            print("You can't interact with that.")
+    elif room == "one_two_corridor":
+        if obj_interact == "door":
+            one_two_door()
+        elif obj_interact == "wall":
+            one_two_wall()
+        else:
+            print("You can't interact with that.")
             
 
 def inventory_general():
@@ -324,13 +363,13 @@ def room_check(x, y, newx, newy):
         posy = x.ypos
         if newx == 0 and newy == 0:
             lobby_sequence()
-            break
         elif newx == 1 and newy == 0:
             book_room()
-            break
         elif newx == 1 and newy == 1:
             one_one_corridor()
-            break
+        elif newx == 1 and newy == 2:
+            one_two_corridor()
+        break
 
 """
 def first_action(x, y, counter):
