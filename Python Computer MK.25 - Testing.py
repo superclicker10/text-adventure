@@ -13,6 +13,8 @@ inventory = []
 ending_condition = False
 door_interact_state = False
 bookshelf_interact_state = False
+wall_counter = 0
+lobby_wall, bookshelf_wall, one_one_wall_done = False, False, False
 
 def lobby_sequence():
     global room
@@ -90,11 +92,21 @@ def book_room_bookshelf(bookshelf_interact_state):
         print("You have no need for another book.")
         time.sleep(1)
 
-def book_room_wall(wall_counter):
+def book_room_wall():
+    global wall_counter
+    global bookshelf_wall
     print("You touch the wall again.")
     time.sleep(1)
     print("It's still cold.")
     time.sleep(1)
+    if bookshelf_wall == False:
+        wall_counter = wall_counter + 1
+    bookshelf_wall = True
+    return wall_counter, bookshelf_wall
+
+def book_use(room):
+    if room == "lobby" or room == "book_room" or room == "one_one_corridor":
+        print("There is nothing here to use the book on.")
 
 def hole_ending_sequence():
     global ending_condition
@@ -116,13 +128,17 @@ def one_one_corridor():
     print("There is no sign of anything useful in this space.")
     time.sleep(1)
 
-def one_one_wall(wall_counter):
+def one_one_wall():
+    global wall_counter
+    global one_one_wall_done
     print("You touch the wall again.")
     time.sleep(1)
     print("Why do you keep doing this?")
     time.sleep(1)
-    wall_counter = wall_counter + 1
-    return wall_counter
+    if one_one_wall_done == False:
+        wall_counter = wall_counter + 1
+    one_one_wall_done = True
+    return wall_counter, one_one_wall_done
 
 def one_one_corridor_examine(obj_examine):
     if obj_examine == "door":
@@ -215,11 +231,17 @@ def examine(room):
         one_one_corridor_examine(obj_examine)
 
 def interact(room):
+    global wall_counter
+    global lobby_wall
     obj_interact = input("What would you like to interact with?: ")
     if room == "lobby":
         if obj_interact == "wall":
             print("You touch the wall. It's cold.")
             time.sleep(1)
+            if lobby_wall == False:
+                wall_counter = wall_counter + 1
+            lobby_wall = True
+            return lobby_wall, wall_counter
         else:
             print("You can't interact with that.")
     elif room == "book_room":
@@ -275,6 +297,27 @@ def drop_item(item):
             pass
     print("You do not have this item.")
 
+def use(room):
+    if inventory == []:
+        print("You have nothing to use.")
+    else:
+        print(inventory, "is your inventory.")
+        time.sleep(1)
+        item = input("What item would you like to use?: ")
+        for x in inventory:
+            if item == x:
+                use_navigation(item, room)
+                break
+            else:
+                continue
+            
+def use_navigation(item, room):
+    if item == "book":
+        book_use(room)
+    else:
+        print("You can't use that item.")
+    
+
 def room_check(x, y, newx, newy):
     for x in locations:
         posx = x.xpos
@@ -296,10 +339,12 @@ def first_action(x, y, counter):
     if action == "move":
         move(x, y, room)
 """
-def repeated_action(x, y, newx, newy):
+def repeated_action(x, y, newx, newy, wall_counter):
+    print()
     room_check(x, y, newx, newy)
     x = newx
     y = newy
+    print(wall_counter)
     print("Your co-ordinates are", str(x)+", "+str(y))
     action = input("What do? (interact, move, use, examine, inventory): ")
     if action == "move":
@@ -310,6 +355,10 @@ def repeated_action(x, y, newx, newy):
         interact(room)
     elif action == "inventory":
         inventory_general()
+    elif action == "use":
+        use(room)
+    else:
+        print("You can't do that.")
     
 
 while game_on == False:
@@ -326,7 +375,7 @@ while game_on == True:
     if ending_condition == True:
         game_on = "ended"
         break
-    repeated_action(x, y, newx, newy)
+    repeated_action(x, y, newx, newy, wall_counter)
     """
     try:
         repeated_action(x, y, newx, newy)
