@@ -6,6 +6,7 @@ from locations import *
 from wallmessages import *
 
 restricted_pos = ["01", "02", "20", "21", "22"]
+action = None
 game_on = False
 x, newx = 0, 0
 y, newy = 0, 0
@@ -16,8 +17,8 @@ one_one_door_interact_state = False
 bookshelf_interact_state = False
 wall_counter = 0
 general_backup = 0
-lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = False
-lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = 0
+lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = False
+lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = 0
 
 
 
@@ -33,6 +34,10 @@ def lobby_sequence():
     print("It looks to contain a bookshelf.")
     time.sleep(1)
 
+
+
+
+
 def book_room():
     global room
     room = "book_room"
@@ -40,10 +45,7 @@ def book_room():
     time.sleep(1)
     print("A door is in front of you at your north edge.")
     time.sleep(1)
-    print("There is a large hole at your south-east.")
-
-
-    
+    print("There is a large hole at your south-east.")   
 
 def bookshelf_sequence():
     print("It's a bookshelf.")
@@ -232,8 +234,45 @@ def one_two_corridor_examine(obj_examine):
         time.sleep(1)
         print("And it seems to lead somewhere more grandiose than the last.")
         time.sleep(1)
+    else:
+        print("You can't examine that.")
 
 
+
+
+def one_three_lobby():
+    global room
+    room = "one_three_lobby"
+    print("You are through the door into the big room.")
+    time.sleep(1)
+    print("It is expansive, with many extra corridors going to different places.")
+    time.sleep(1)
+    print("There are many things to do here.")
+    time.sleep(1)
+
+def one_three_wall():
+    global wall_counter
+    global one_three_wall_done
+    global one_three_wall_backup
+    global general_backup
+    if one_three_wall_done == False:
+        one_three_wall_backup = general_backup = wall_counter
+        wall_message_check(one_three_wall_backup)
+        wall_counter = wall_counter + 1
+    else:
+        wall_message_check(one_three_wall_backup)
+    one_three_wall_done = True
+    return wall_counter, one_three_wall_done
+
+def one_three_lobby_examine(obj_examine):
+    if obj_examine == "wall":
+        print("It's a wall.")
+        time.sleep(1)
+    elif obj_examine == "door":
+        print("Perhaps you could get a better view of the door from the previous room.")
+        time.sleep(1)
+    else:
+        print("You can't examine that.")
 
 
 
@@ -306,6 +345,12 @@ def move(x, y, room):
             one_one_southedge()
         elif room == "one_two_corridor":
             one_two_northedge()
+        elif room == "one_three_lobby":
+            edge = input("East edge, or south edge?: ")
+            if edge == "east":
+                one_three_eastedge()
+            elif edge == "south":
+                one_three_southedge()
         else:
             print("There are no edges to move to in this room.")
             time.sleep(1)
@@ -323,6 +368,9 @@ def examine(room):
     elif room == "one_two_corridor":
         obj_examine = input("What object would you like to examine?: ")
         one_two_corridor_examine(obj_examine)
+    elif room == "one_three_lobby":
+        obj_examine = input("What object would you like to examine?: ")
+        one_three_lobby_examine(obj_examine)
 
 def interact(room):
     global wall_counter
@@ -377,7 +425,9 @@ def interact(room):
         else:
             print("You can't interact with that.")
             time.sleep(1)
-            
+    elif room == "one_three_lobby":
+        if obj_interact == "wall":
+            one_three_wall()
 
 def inventory_general():
     choice = input("View or drop item from inventory?: ")
@@ -446,6 +496,8 @@ def room_check(x, y, newx, newy):
             one_one_corridor()
         elif newx == 1 and newy == 2:
             one_two_corridor()
+        elif newx == 1 and newy == 3:
+            one_three_lobby()
         break
 
 def wall_message_check(general_backup):
@@ -455,11 +507,11 @@ def wall_message_check(general_backup):
         else:
             pass
 def repeated_action(x, y, newx, newy, wall_counter):
+    global action
     print()
     room_check(x, y, newx, newy)
     x = newx
     y = newy
-    #print(wall_counter) for experiement purposes only
     print("Your co-ordinates are", str(x)+", "+str(y))
     action = input("What to do? (interact, move, use, examine, inventory): ")
     if action == "move":
@@ -472,8 +524,10 @@ def repeated_action(x, y, newx, newy, wall_counter):
         inventory_general()
     elif action == "use":
         use(room)
-    elif action == "exit":
+    elif action == "stop":
         ending_condition = True
+        game_on = "ended"
+        return action
     else:
         print("You can't do that.")
     
@@ -481,7 +535,7 @@ def repeated_action(x, y, newx, newy, wall_counter):
 while game_on == False:
     start = input("Turn game on?: ")
     if start == "yes":
-        print("Enter 'exit' to stop the game.")
+        print("Enter 'stop' to stop the game.")
         time.sleep(1)
         game_on = True
     else:
@@ -491,6 +545,9 @@ while game_on == False:
 
 while game_on == True:
     if ending_condition == True:
+        game_on = "ended"
+        break
+    elif action == "stop":
         game_on = "ended"
         break
     repeated_action(x, y, newx, newy, wall_counter)
