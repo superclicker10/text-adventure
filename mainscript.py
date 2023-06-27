@@ -42,6 +42,9 @@ def book_room():
     time.sleep(1)
     print("There is a large hole at your south-east.")
 
+
+    
+
 def bookshelf_sequence():
     print("It's a bookshelf.")
     time.sleep(1)
@@ -116,7 +119,7 @@ def book_room_wall():
     return wall_counter, bookshelf_wall
 
 def book_use(room):
-    if room == "lobby" or room == "book_room" or room == "one_one_corridor":
+    if room == "lobby" or room == "book_room" or room == "one_one_corridor" or room == "one_two_corridor":
         print("There is nothing here to use the book on.")
 
 def hole_ending_sequence():
@@ -126,6 +129,10 @@ def hole_ending_sequence():
     print("ENDING 1 - FALLING INTO THE DEPTHS")
     time.sleep(2)
     ending_condition = True
+
+
+
+    
 
 def one_one_corridor():
     global room
@@ -172,6 +179,9 @@ def one_one_southedge():
     print("It leads back to the bookshelf room you just came from.")
     time.sleep(1)
 
+
+
+
 def one_two_corridor():
     global room
     room = "one_two_corridor"
@@ -182,29 +192,46 @@ def one_two_corridor():
     print("There is a door leading to a bigger area north of you.")
     time.sleep(1)
 
-def one_two_wall():      #ADD NEW WALL SYSTEM HERE
+def one_two_wall():      
     global wall_counter
     global one_two_wall_done
-    print("You touch the wall again.")
-    time.sleep(1)
-    print("What are you getting out of this?")
-    time.sleep(1)
+    global one_two_wall_backup
+    global general_backup
     if one_two_wall_done == False:
+        one_two_wall_backup = general_backup = wall_counter
+        wall_message_check(one_two_wall_backup)
         wall_counter = wall_counter + 1
+    else:
+        wall_message_check(one_two_wall_backup)
     one_two_wall_done = True
     return wall_counter, one_two_wall_done
 
 def one_two_door():
     if one_two_door_state == False:
-        print("You open the door wider, giving you a clear view of the corridor ahead.")
+        print("You open the door wider.")
         time.sleep(1)
-        print("Even though you already could've gone through it.")
+        print("You can see a big room full of side rooms and posts in the middle.")
+        time.sleep(1)
+        print("It looks intriguing.")
         time.sleep(1)
     else:
         print("You close the door back to where it was originally.")
         time.sleep(1)
         one_two_door_interact = False
         return door_interact
+
+def one_two_north_edge():
+    print("A door that leads to another room.")
+    time.sleep(1)
+
+def one_two_corridor_examine(obj_examine):
+    if obj_examine == "door":
+        print("This is a door much like the last one.")
+        time.sleep(1)
+        print("But this one is a little grander than that.")
+        time.sleep(1)
+        print("And it seems to lead somewhere more grandiose than the last.")
+        time.sleep(1)
 
 
 
@@ -219,7 +246,7 @@ def oob(x, y, newx, newy):
 def move(x, y, room):
     global newx
     global newy
-    move = input("Where moving to? (+x, -x, +y, -y, edge): ")
+    move = input("Where are you moving to? (+x, -x, +y, -y, edge): ")
     if move == "+x":
         x_backup = x
         newx = x + 1
@@ -228,7 +255,6 @@ def move(x, y, room):
             time.sleep(1)
             newx = x_backup
         else:
-            #print("This position is restricted.")
             newy = y
             return x, y, newx, newy
     elif move == "-x":
@@ -242,7 +268,6 @@ def move(x, y, room):
             time.sleep(1)
             newx = x_backup
         else:
-            #print("This position is restricted.")
             newy = y
             return x, y, newx, newy
     elif move == "+y":
@@ -253,7 +278,6 @@ def move(x, y, room):
             time.sleep(1)
             newy = y_backup
         else:
-            #print("This position is restricted.")
             newx = x
             return x, y, newx, newy
     elif move == "-y":
@@ -267,7 +291,6 @@ def move(x, y, room):
             time.sleep(1)
             newy = y_backup
         else:
-            #print("This position is restricted.")
             newx = x
             return x, y, newx, newy
     elif move == "edge":
@@ -297,6 +320,9 @@ def examine(room):
     elif room == "one_one_corridor":
         obj_examine = input("What object would you like to examine?: ")
         one_one_corridor_examine(obj_examine)
+    elif room == "one_two_corridor":
+        obj_examine = input("What object would you like to examine?: ")
+        one_two_corridor_examine(obj_examine)
 
 def interact(room):
     global wall_counter
@@ -389,6 +415,7 @@ def drop_item(item):
 def use(room):
     if inventory == []:
         print("You have nothing to use.")
+        time.sleep(1)
     else:
         print(inventory, "is your inventory.")
         time.sleep(1)
@@ -434,7 +461,7 @@ def repeated_action(x, y, newx, newy, wall_counter):
     y = newy
     #print(wall_counter) for experiement purposes only
     print("Your co-ordinates are", str(x)+", "+str(y))
-    action = input("What do? (interact, move, use, examine, inventory): ")
+    action = input("What to do? (interact, move, use, examine, inventory): ")
     if action == "move":
         move(x, y, room)
     elif action == "examine":
@@ -445,6 +472,8 @@ def repeated_action(x, y, newx, newy, wall_counter):
         inventory_general()
     elif action == "use":
         use(room)
+    elif action == "exit":
+        ending_condition = True
     else:
         print("You can't do that.")
     
@@ -452,7 +481,8 @@ def repeated_action(x, y, newx, newy, wall_counter):
 while game_on == False:
     start = input("Turn game on?: ")
     if start == "yes":
-        print("Gaming.")
+        print("Enter 'exit' to stop the game.")
+        time.sleep(1)
         game_on = True
     else:
         print("Next time, play gaming.")
