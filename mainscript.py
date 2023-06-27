@@ -1,11 +1,13 @@
 import time
-import math
+import random
 import webbrowser
 from location import *
 from locations import *
 from wallmessages import *
+from books import *
 
 restricted_pos = ["01", "02", "20", "21", "22"]
+book_num = random.randint(1, 1000)
 action = None
 game_on = False
 x, newx = 0, 0
@@ -17,8 +19,8 @@ one_one_door_interact_state = False
 bookshelf_interact_state = False
 wall_counter = 0
 general_backup = 0
-lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = False
-lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = 0
+lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = lectern_room_done = False
+lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = lectern_room_wall_backup = 0
 
 
 
@@ -96,7 +98,14 @@ def book_room_bookshelf(bookshelf_interact_state):
     if bookshelf_interact_state == False:
         print("You take a book from one of the shelves, hoping it might be useful.")
         time.sleep(1)
-        add_inventory("book")
+        if book_num <= 25:
+            add_inventory("fish book")
+        elif book_num == 1000:
+            add_inventory("wall lore book")
+        else:
+            add_inventory("book")
+            time.sleep(1)
+        bookshelf_interact_state = True
         return bookshelf_interact
     elif inventory == []:
         print("You take another book from one of the shelves, hoping it might be useful.")
@@ -121,8 +130,29 @@ def book_room_wall():
     return wall_counter, bookshelf_wall
 
 def book_use(room):
-    if room == "lobby" or room == "book_room" or room == "one_one_corridor" or room == "one_two_corridor":
+    if room == "lobby" or room == "book_room" or room == "one_one_corridor" or room == "one_two_corridor" or room == "one_three_lobby":
         print("There is nothing here to use the book on.")
+    elif room == "lectern_room":
+        print("Reading book at the lectern...")
+        time.sleep(2)
+        book()
+
+def fish_book_use(room):
+    if room == "lobby" or room == "book_room" or room == "one_one_corridor" or room == "one_two_corridor" or room == "one_three_lobby":
+        print("There is nothing here to use the book on.")
+    elif room == "lectern_room":
+        print("Reading fish book at the lectern...")
+        time.sleep(2)
+        fish_book()
+
+def wall_book_use(room):
+    if room == "lobby" or room == "book_room" or room == "one_one_corridor" or room == "one_two_corridor" or room == "one_three_lobby":
+        print("There is nothing here to use the book on.")
+    elif room == "lectern_room":
+        print("Reading fish book at the lectern...")
+        time.sleep(2)
+        wall_lore_book()   #IMPLEMENT ALL BOOKS
+        
 
 def hole_ending_sequence():
     global ending_condition
@@ -253,7 +283,7 @@ def one_three_lobby():
 def one_three_wall():
     global wall_counter
     global one_three_wall_done
-    global one_three_wall_backup
+    global lectern_room_wall_backup
     global general_backup
     if one_three_wall_done == False:
         one_three_wall_backup = general_backup = wall_counter
@@ -275,7 +305,39 @@ def one_three_lobby_examine(obj_examine):
         print("You can't examine that.")
 
 
+def lectern_room():
+    global room
+    room = "lectern_room"
+    print("You move to a solitary room.")
+    time.sleep(1)
+    print("There is a lectern in the corner.")
+    time.sleep(1)
+    print("Maybe you could read those books from the bookshelf on it.")
+    time.sleep(1)
 
+def lectern_wall():
+    global wall_counter
+    global lectern_wall_done
+    global lectern_room_wall_backup
+    global general_backup
+    if lectern_wall_done == False:
+        lectern_room_wall_backup = general_backup = wall_counter
+        wall_message_check(lectern_room_wall_backup)
+        wall_counter = wall_counter + 1
+    else:
+        wall_message_check(lectern_room_wall_backup)
+    lectern_wall_done = True
+    return wall_counter, lectern_wall_done
+
+def lectern_room_examine(obj_examine):
+    if obj_examine == "lectern":
+        print("This is a very old, yet somehow very clean lectern.")
+        time.sleep(1)
+        print("Maybe this lectern lets you read some of the books from that bookshelf properly.")
+        time.sleep(1)
+    elif obj_examine == "wall":
+        print("It's. A. Wall.")
+        time.sleep(1)
 
 def oob(x, y, newx, newy):
     if newx <= -1 or newy <= -1:
@@ -371,6 +433,9 @@ def examine(room):
     elif room == "one_three_lobby":
         obj_examine = input("What object would you like to examine?: ")
         one_three_lobby_examine(obj_examine)
+    elif room == "lectern_room":
+        obj_examine = input("What object would you like to examine?: ")
+        lectern_room_examine(obj_examine)
 
 def interact(room):
     global wall_counter
@@ -428,6 +493,9 @@ def interact(room):
     elif room == "one_three_lobby":
         if obj_interact == "wall":
             one_three_wall()
+    elif room == "lectern_room":
+        if obj_interact == "wall":
+            lectern_wall()
 
 def inventory_general():
     choice = input("View or drop item from inventory?: ")
@@ -480,6 +548,10 @@ def use(room):
 def use_navigation(item, room):
     if item == "book":
         book_use(room)
+    elif item == "fish book":
+        fish_book_use(room)
+    elif item == "wall lore book":
+        wall_book_use(room)
     else:
         print("You can't use that item.")
     
@@ -498,6 +570,8 @@ def room_check(x, y, newx, newy):
             one_two_corridor()
         elif newx == 1 and newy == 3:
             one_three_lobby()
+        elif newx == 2 and newy == 3:
+            lectern_room()
         break
 
 def wall_message_check(general_backup):
