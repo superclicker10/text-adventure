@@ -45,10 +45,14 @@ def book():
             time.sleep(2)
             print("This chance is refreshed every time you launch the game.")
             time.sleep(2)
+            print("Also, books and special delays do not change, regardless of what you entered at the start.")
+            time.sleep(2)
         elif tutorial == "walls":
             print("Read the wall lore book for more information.")
             time.sleep(2)
         elif tutorial == "leave":
+            print("Book finished!")
+            time.sleep(2)
             break
         
 def fish_book():
@@ -56,10 +60,29 @@ def fish_book():
     time.sleep(2)
     print("'Truest information I've ever heard.' you think to yourself.")
     time.sleep(2)
+    print("Book finished!")
+    time.sleep(2)
 
 def wall_lore_book():
     print("The book opens with a ferocity and mystery that you haven't seen before.")
     time.sleep(4)
     print("Legend has it, there is an omnipresent god locked in this castle.")
     time.sleep(2)
-    
+    print("They are linked to the walls of this place.")
+    time.sleep(2)
+    print("That's why the walls are so impenetrable.")
+    time.sleep(2)
+    print("There is an unending amount of energy inside these walls.")
+    time.sleep(2)
+    print("If you touch every one of these walls...")
+    time.sleep(2)
+    print("...something will happen.")
+    time.sleep(2)
+    print("No one knows what yet.")
+    time.sleep(2)
+    print("Well done if you found this book.")
+    time.sleep(2)
+    print("Will you be the one to activate the infinite energy stored within this place?")
+    time.sleep(2)
+    print("Book finished!")
+    time.sleep(2)
