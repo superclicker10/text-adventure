@@ -52,8 +52,14 @@ def book():
             break
         
 def fish_book():
-    print("Test")
+    print("Fish do not fly.")
+    time.sleep(2)
+    print("'Truest information I've ever heard.' you think to yourself.")
+    time.sleep(2)
 
 def wall_lore_book():
-    print("Test")
-#IMPLEMENT THESE (NUTS)
+    print("The book opens with a ferocity and mystery that you haven't seen before.")
+    time.sleep(4)
+    print("Legend has it, there is an omnipresent god locked in this castle.")
+    time.sleep(2)
+    

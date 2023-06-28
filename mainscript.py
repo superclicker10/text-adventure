@@ -19,7 +19,7 @@ one_one_door_interact_state = False
 bookshelf_interact_state = False
 wall_counter = 0
 general_backup = 0
-lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = lectern_room_done = False
+lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = lectern_wall_done = False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = lectern_room_wall_backup = 0
 
 
