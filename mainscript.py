@@ -6,7 +6,7 @@ from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "04", "15", "20", "21", "22", "24", "33"]
+restricted_pos = ["01", "02", "03", "04", "15", "20", "21", "22", "25", "33", "34"]
 book_num = random.randint(1, 1000)
 action = None
 n = 1
@@ -150,28 +150,31 @@ def book_room_wall():
     return wall_counter, bookshelf_wall
 
 def book_use(room):
-    if room == "lobby" or room == "book_room" or room == "one_one_corridor" or room == "one_two_corridor" or room == "one_three_lobby":
-        print("There is nothing here to use the book on.")
-    elif room == "lectern_room":
+    if room == "lectern_room":
         print("Reading book at the lectern...")
         time.sleep(2)
         book()
+    else:
+        print("There is nothing here to use the book on.")
+        time.sleep(n)
 
 def fish_book_use(room):
-    if room == "lobby" or room == "book_room" or room == "one_one_corridor" or room == "one_two_corridor" or room == "one_three_lobby":
-        print("There is nothing here to use the book on.")
-    elif room == "lectern_room":
+    if room == "lectern_room":
         print("Reading fish book at the lectern...")
         time.sleep(2)
         fish_book()
+    else:
+        print("There is nothing here to use the book on.")
+        time.sleep(n)
 
 def wall_book_use(room):
-    if room == "lobby" or room == "book_room" or room == "one_one_corridor" or room == "one_two_corridor" or room == "one_three_lobby":
+    if room == "lectern_room":
         print("There is nothing here to use the book on.")
-    elif room == "lectern_room":
-        print("Reading wall lore book at the lectern...")
         time.sleep(2)
-        wall_lore_book()   
+        wall_lore_book()
+    else:
+        print("Reading wall lore book at the lectern...")
+        time.sleep(n)  
         
 
 def hole_ending_sequence():
@@ -333,6 +336,32 @@ def one_three_southedge():
     time.sleep(n)
 
 
+def one_four():
+    global room
+    room = "one_four"
+    print("You have a better view of this huge room now.")
+    time.sleep(n)
+    print("There is a wide and long corridor ending at a singular room at the end.")
+    time.sleep(n)
+    print("To your left there is a door that looks unbreachable, but does look like it can be opened somehow.")
+    time.sleep(n)
+    print("(This is on the border of v0.1.5 room content, but there may still be more to do in previous rooms!)")
+    time.sleep(n)
+
+def one_four_westedge():
+    print("A huge sliding door.")
+    time.sleep(n)
+
+def one_four_examine(obj_examine):
+    if obj_examine == "door":
+        print("This is a huge door, made of an undiscernable metal.")
+        time.sleep(n)
+        print("It looks like it can be opened using a remote system somehow.")
+        time.sleep(n)
+        print("Maybe there is some sort of switch to open the door somewhere.")
+        time.sleep(n)
+
+
 
 
 
@@ -344,10 +373,7 @@ def lectern_room():
     print("There is a lectern in the corner.")
     time.sleep(n)
     print("Maybe you could read those books from the bookshelf on it.")
-    time.sleep(n)
-    print("(This is the end of v0.1.4 room content, but there may still be more to do in previous rooms!)")
-    time.sleep(n)
-    
+    time.sleep(n)    
 
 def lectern_wall():
     global wall_counter
@@ -382,30 +408,21 @@ def lectern_interact():
 
 
 
-def one_four():
+def two_four():
     global room
-    room = "one_four"
-    print("You have a better view of this huge room now.")
+    room = "two_four"
+    print("You are further along in the big central room.")
     time.sleep(n)
-    print("There is a wide and long corridor ending at a singular room at the end.")
+    print("You now have view of three locked rooms a few units to your left.")
     time.sleep(n)
-    print("To your left there is a door that looks unbreachable, but does look like it can be opened somehow.")
+    print("They all have identical doors.")
     time.sleep(n)
-    print("(This is the end of v0.1.4 room content, but there may still be more to do in previous rooms!)")
-    time.sleep(n)
-
-def one_four_westedge():
-    print("A huge sliding door.")
+    print("(This is on the border of v0.1.5 content, but there may still be more to do in previous rooms!)")
     time.sleep(n)
 
-def one_four_examine(obj_examine):
-    if obj_examine == "door":
-        print("This is a huge door, made of an undiscernable metal.")
-        time.sleep(n)
-        print("It looks like it can be opened using a remote system somehow.")
-        time.sleep(n)
-        print("Maybe there is some sort of switch to open the door somewhere.")
-        time.sleep(n)
+def two_four_southedge():
+    print("There is a foggy, mysterious room to your south.")
+    time.sleep(n)
 
 
 
@@ -486,12 +503,14 @@ def move(x, y, room):
                 one_three_southedge()
         elif room == "one_four":
             one_four_westedge()
+        elif room == "two_four":
+            two_four_southedge()
         else:
             print("There are no edges to move to in this room.")
             time.sleep(n)
 
 def examine(room):
-    if room == "lobby":
+    if room == "lobby" or room == "two_four":
         print("There is nothing to examine in this room.")
         time.sleep(n)
     elif room == "book_room":
@@ -518,71 +537,72 @@ def interact(room):
     global lobby_wall
     global general_backup
     global lobby_wall_backup
-    if room == "one_four":
+    if room == "one_four" or room == "two_four":
         print("There is nothing to interact with in this room.")
         time.sleep(n)
-    obj_interact = input("What would you like to interact with?: ")
-    if room == "lobby":
-        if obj_interact == "wall":
-            if lobby_wall == False:
-                lobby_wall_backup = general_backup = wall_counter
-                wall_message_check(lobby_wall_backup)
-                wall_counter = wall_counter + 1
+    else:
+        obj_interact = input("What would you like to interact with?: ")
+        if room == "lobby":
+            if obj_interact == "wall":
+                if lobby_wall == False:
+                    lobby_wall_backup = general_backup = wall_counter
+                    wall_message_check(lobby_wall_backup)
+                    wall_counter = wall_counter + 1
+                else:
+                    wall_message_check(lobby_wall_backup)
+                lobby_wall = True
+                return lobby_wall, wall_counter
             else:
-                wall_message_check(lobby_wall_backup)
-            lobby_wall = True
-            return lobby_wall, wall_counter
-        else:
-            print("You can't interact with that.")
-            time.sleep(1)
-    elif room == "book_room":
-        global one_one_door_interact_state
-        global bookshelf_interact_state
-        if obj_interact == "door":
-            book_room_door_interact(one_one_door_interact_state)
-            if one_one_door_interact_state == True:
-                one_one_door_interact_state == False
+                print("You can't interact with that.")
+                time.sleep(1)
+        elif room == "book_room":
+            global one_one_door_interact_state
+            global bookshelf_interact_state
+            if obj_interact == "door":
+                book_room_door_interact(one_one_door_interact_state)
+                if one_one_door_interact_state == True:
+                    one_one_door_interact_state == False
+                else:
+                    one_one_door_interact_state = True
+            elif obj_interact == "bookshelf":
+                book_room_bookshelf(bookshelf_interact_state)
+                bookshelf_interact_state = True
+                return bookshelf_interact_state
+            elif obj_interact == "hole":
+                hole_ending_sequence()
+            elif obj_interact == "wall":
+                book_room_wall()
             else:
-                one_one_door_interact_state = True
-        elif obj_interact == "bookshelf":
-            book_room_bookshelf(bookshelf_interact_state)
-            bookshelf_interact_state = True
-            return bookshelf_interact_state
-        elif obj_interact == "hole":
-            hole_ending_sequence()
-        elif obj_interact == "wall":
-            book_room_wall()
-        else:
-            print("You can't interact with that.")
-            time.sleep(n)
-    elif room == "one_one_corridor":
-        if obj_interact == "wall":
-            one_one_wall()
-        else:
-            print("You can't interact with that.")
-            time.sleep(n)
-    elif room == "one_two_corridor":
-        if obj_interact == "door":
-            one_two_door()
-        elif obj_interact == "wall":
-            one_two_wall()
-        else:
-            print("You can't interact with that.")
-            time.sleep(n)
-    elif room == "one_three_lobby":
-        if obj_interact == "wall":
-            one_three_wall()
-        else:
-            print("You can't interact with that.")
-            time.sleep(n)
-    elif room == "lectern_room":
-        if obj_interact == "wall":
-            lectern_wall()
-        elif obj_interact == "lectern":
-            lectern_interact()
-        else:
-            print("You can't interact with that.")
-            time.sleep(n)
+                print("You can't interact with that.")
+                time.sleep(n)
+        elif room == "one_one_corridor":
+            if obj_interact == "wall":
+                one_one_wall()
+            else:
+                print("You can't interact with that.")
+                time.sleep(n)
+        elif room == "one_two_corridor":
+            if obj_interact == "door":
+                one_two_door()
+            elif obj_interact == "wall":
+                one_two_wall()
+            else:
+                print("You can't interact with that.")
+                time.sleep(n)
+        elif room == "one_three_lobby":
+            if obj_interact == "wall":
+                one_three_wall()
+            else:
+                print("You can't interact with that.")
+                time.sleep(n)
+        elif room == "lectern_room":
+            if obj_interact == "wall":
+                lectern_wall()
+            elif obj_interact == "lectern":
+                lectern_interact()
+            else:
+                print("You can't interact with that.")
+                time.sleep(n)
 
 def inventory_general():
     choice = input("View or drop item from inventory?: ")
@@ -661,6 +681,8 @@ def room_check(x, y, newx, newy):
             one_four()
         elif newx == 2 and newy == 3:
             lectern_room()
+        elif newx == 2 and newy == 4:
+            two_four()
         break
 
 def wall_message_check(general_backup):
