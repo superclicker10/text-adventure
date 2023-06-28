@@ -6,7 +6,7 @@ from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "20", "21", "22", "33"]
+restricted_pos = ["01", "02", "03", "04", "15", "20", "21", "22", "24", "33"]
 book_num = random.randint(1, 1000)
 action = None
 n = 1
@@ -29,13 +29,16 @@ def time_check():
     global n
     n = float(input("How long do you want the text delay to be? (1 at default, range from 0.5 to 2): "))
     if n < 0.5:
-        print("n set to min value (0.5)")
+        print("Delay set to min value (0.5)")
+        time.sleep(n)
         n = 0.5
     elif n > 2:
-        print("n set to max value (2)")
+        print("Delay set to max value (2)")
+        time.sleep(n)
         n = 2
     else:
-        print("n set to "+str(n)+"!")
+        print("Delay set to "+str(n)+"!")
+        time.sleep(n)
     return n
 
 
@@ -321,6 +324,17 @@ def one_three_lobby_examine(obj_examine):
     else:
         print("You can't examine that.")
 
+def one_three_eastedge():
+    print("There is a foggy, mysterious room to your east.")
+    time.sleep(n)
+
+def one_three_southedge():
+    print("It's a door, much like the last one you found.")
+    time.sleep(n)
+
+
+
+
 
 def lectern_room():
     global room
@@ -331,6 +345,9 @@ def lectern_room():
     time.sleep(n)
     print("Maybe you could read those books from the bookshelf on it.")
     time.sleep(n)
+    print("(This is the end of v0.1.4 room content, but there may still be more to do in previous rooms!)")
+    time.sleep(n)
+    
 
 def lectern_wall():
     global wall_counter
@@ -373,6 +390,8 @@ def one_four():
     print("There is a wide and long corridor ending at a singular room at the end.")
     time.sleep(n)
     print("To your left there is a door that looks unbreachable, but does look like it can be opened somehow.")
+    time.sleep(n)
+    print("(This is the end of v0.1.4 room content, but there may still be more to do in previous rooms!)")
     time.sleep(n)
 
 def one_four_westedge():
@@ -517,7 +536,7 @@ def interact(room):
             print("You can't interact with that.")
             time.sleep(1)
     elif room == "book_room":
-        global door_interact_state
+        global one_one_door_interact_state
         global bookshelf_interact_state
         if obj_interact == "door":
             book_room_door_interact(one_one_door_interact_state)

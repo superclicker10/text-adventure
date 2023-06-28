@@ -94,3 +94,9 @@ def wall_15():
     time.sleep(1)
     print("Have you read the wall lore book?")
     time.sleep(1)
+
+def wall_16():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Do you even know what that is?")
+    time.sleep(1)
