@@ -6,7 +6,7 @@ from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "04", "15", "20", "21", "22", "25", "33", "34"]
+restricted_pos = ["01", "02", "03", "04", "05", "06", "17", "20", "21", "22", "26", "33", "34", "35"]
 book_num = random.randint(1, 1000)
 action = None
 n = 1
@@ -27,19 +27,24 @@ lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_b
 
 def time_check():
     global n
-    n = float(input("How long do you want the text delay to be? (1 at default, range from 0.5 to 2): "))
-    if n < 0.5:
-        print("Delay set to min value (0.5)")
+    try:
+        n = float(input("How long do you want the text delay to be? (1 at default, range from 0.5 to 2): "))
+    except ValueError:
+        print("n set to 1.")
         time.sleep(n)
-        n = 0.5
-    elif n > 2:
-        print("Delay set to max value (2)")
-        time.sleep(n)
-        n = 2
     else:
-        print("Delay set to "+str(n)+"!")
-        time.sleep(n)
-    return n
+        if n < 0.5:
+            print("Delay set to min value (0.5)")
+            time.sleep(n)
+            n = 0.5
+        elif n > 2:
+            print("Delay set to max value (2)")
+            time.sleep(n)
+            n = 2
+        else:
+            print("Delay set to "+str(n)+"!")
+            time.sleep(n)
+        return n
 
 
 
@@ -186,7 +191,7 @@ def hole_ending_sequence():
     ending_condition = True
 
 
-
+    
     
 
 def one_one_corridor():
@@ -345,8 +350,6 @@ def one_four():
     time.sleep(n)
     print("To your left there is a door that looks unbreachable, but does look like it can be opened somehow.")
     time.sleep(n)
-    print("(This is on the border of v0.1.5 room content, but there may still be more to do in previous rooms!)")
-    time.sleep(n)
 
 def one_four_westedge():
     print("A huge sliding door.")
@@ -360,8 +363,72 @@ def one_four_examine(obj_examine):
         time.sleep(n)
         print("Maybe there is some sort of switch to open the door somewhere.")
         time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
 
 
+
+
+def one_five():
+    global room
+    room = "one_five"
+    print("You're now further along this now very long corridor.")
+    time.sleep(n)
+    print("To your left is another door like the one south of you.")
+    time.sleep(n)
+    print("To your north you are starting to see more corridors in the distance.")
+    time.sleep(n)
+
+def one_five_westedge():
+    print("A huge sliding door.")
+    time.sleep(n)
+
+def one_five_examine(obj_examine):
+    if obj_examine == "door":
+        print("This is another huge door like the one south of you.")
+        time.sleep(n)
+        print("There seems to be another one to your north as well.")
+        time.sleep(n)
+        print("Perhaps there'll be a switch for them somewhere.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+
+
+def one_six():
+    global room
+    room = "one_six"
+    print("To your west is the most northern door of the three.")
+    time.sleep(n)
+    print("To your north is a strange space with an object in it.")
+    time.sleep(n)
+    print("Perhaps you should investigate.")
+    time.sleep(n)
+    print("(This is on the border of v0.1.5 content, but there may still be more to do in previous rooms!)")
+    time.sleep(n)
+
+def one_six_examine(obj_examine):
+    if obj_examine == "door":
+        print("It's a door, just like the two south of you.")
+        time.sleep(n)
+        print("Another switch may be required.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+def one_six_westedge():
+    print("Another door.")
+    time.sleep(n)
+
+def one_six_northedge():
+    print("A solitary room which contains a strange object.")
+    time.sleep(n)
+    print("Perhaps it can help you open those doors.")
+    time.sleep(n)
 
 
 
@@ -417,13 +484,22 @@ def two_four():
     time.sleep(n)
     print("They all have identical doors.")
     time.sleep(n)
-    print("(This is on the border of v0.1.5 content, but there may still be more to do in previous rooms!)")
-    time.sleep(n)
 
 def two_four_southedge():
     print("There is a foggy, mysterious room to your south.")
     time.sleep(n)
 
+
+
+def two_five():
+    global room
+    room = "two_five"
+    print("From here you have a full view of both the doors to your west and the huge corridor to your east.")
+    time.sleep(n)
+    print("You now realise you have a lot to explore.")
+    time.sleep(n)
+    print("(This is on the border of v0.1.5 content, but there may still be more to do in previous rooms!)")
+    time.sleep(n)
 
 
 
@@ -503,6 +579,14 @@ def move(x, y, room):
                 one_three_southedge()
         elif room == "one_four":
             one_four_westedge()
+        elif room == "one_five":
+            one_five_westedge()
+        elif room == "one_six":
+            edge = input("West edge, or north edge?: ")
+            if edge == "west":
+                one_six_westedge()
+            elif edge == "north":
+                one_six_northedge()
         elif room == "two_four":
             two_four_southedge()
         else:
@@ -510,34 +594,34 @@ def move(x, y, room):
             time.sleep(n)
 
 def examine(room):
-    if room == "lobby" or room == "two_four":
+    if room == "lobby" or room == "two_four" or room == "two_five":
         print("There is nothing to examine in this room.")
         time.sleep(n)
-    elif room == "book_room":
+    else:
         obj_examine = input("What object would you like to examine?: ")
-        book_room_examine(obj_examine)
-    elif room == "one_one_corridor":
-        obj_examine = input("What object would you like to examine?: ")
-        one_one_corridor_examine(obj_examine)
-    elif room == "one_two_corridor":
-        obj_examine = input("What object would you like to examine?: ")
-        one_two_corridor_examine(obj_examine)
-    elif room == "one_three_lobby":
-        obj_examine = input("What object would you like to examine?: ")
-        one_three_lobby_examine(obj_examine)
-    elif room == "one_four":
-        obj_examine = input("What object would you like to examine?: ")
-        one_four_examine(obj_examine)
-    elif room == "lectern_room":
-        obj_examine = input("What object would you like to examine?: ")
-        lectern_room_examine(obj_examine)
+        if room == "book_room":
+            book_room_examine(obj_examine)
+        elif room == "one_one_corridor":
+            one_one_corridor_examine(obj_examine)
+        elif room == "one_two_corridor":
+            one_two_corridor_examine(obj_examine)
+        elif room == "one_three_lobby":
+            one_three_lobby_examine(obj_examine)
+        elif room == "one_four":
+            one_four_examine(obj_examine)
+        elif room == "one_five":
+            one_five_examine(obj_examine)
+        elif room == "one_six":
+            one_six_examine(obj_examine)
+        elif room == "lectern_room":
+            lectern_room_examine(obj_examine)
 
 def interact(room):
     global wall_counter
     global lobby_wall
     global general_backup
     global lobby_wall_backup
-    if room == "one_four" or room == "two_four":
+    if room == "one_four" or room == "one_six" or room == "one_five" or room == "two_four" or room == "two_five":
         print("There is nothing to interact with in this room.")
         time.sleep(n)
     else:
@@ -663,27 +747,29 @@ def use_navigation(item, room):
         print("You can't use that item.")
     
 
-def room_check(x, y, newx, newy):     #test if removing for loop would work
-    for x in locations:
-        posx = x.xpos
-        posy = x.ypos
-        if newx == 0 and newy == 0:
-            lobby_sequence()
-        elif newx == 1 and newy == 0:
-            book_room()
-        elif newx == 1 and newy == 1:
-            one_one_corridor()
-        elif newx == 1 and newy == 2:
-            one_two_corridor()
-        elif newx == 1 and newy == 3:
-            one_three_lobby()
-        elif newx == 1 and newy == 4:
-            one_four()
-        elif newx == 2 and newy == 3:
-            lectern_room()
-        elif newx == 2 and newy == 4:
-            two_four()
-        break
+def room_check(x, y, newx, newy):
+    if newx == 0 and newy == 0:
+        lobby_sequence()
+    elif newx == 1 and newy == 0:
+        book_room()
+    elif newx == 1 and newy == 1:
+        one_one_corridor()
+    elif newx == 1 and newy == 2:
+        one_two_corridor()
+    elif newx == 1 and newy == 3:
+        one_three_lobby()
+    elif newx == 1 and newy == 4:
+        one_four()
+    elif newx == 1 and newy == 5:
+        one_five()
+    elif newx == 1 and newy == 6:
+        one_six()
+    elif newx == 2 and newy == 3:
+        lectern_room()
+    elif newx == 2 and newy == 4:
+        two_four()
+    elif newx == 2 and newy == 5:
+        two_five()
 
 def wall_message_check(general_backup):
     for x in range(0, 100):
@@ -722,7 +808,9 @@ while game_on == False:
     if start == "yes":
         time_check()
         print("Enter 'stop' to stop the game.")
-        time.sleep(2)
+        time.sleep(1)
+        print("(Current boundaries for this version are (1, 6) and (2, 5). Nothing is more east or more north than those points.)")
+        time.sleep(1)
         game_on = True
     else:
         print("Next time, play gaming.")
