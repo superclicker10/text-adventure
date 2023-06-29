@@ -663,7 +663,7 @@ def use_navigation(item, room):
         print("You can't use that item.")
     
 
-def room_check(x, y, newx, newy):
+def room_check(x, y, newx, newy):     #test if removing for loop would work
     for x in locations:
         posx = x.xpos
         posy = x.ypos
