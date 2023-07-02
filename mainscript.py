@@ -171,9 +171,9 @@ def book_room_bookshelf(bookshelf_interact_state):
     if bookshelf_interact_state == False:
         print("You take a book from one of the shelves, hoping it might be useful.")
         time.sleep(n)
-        if book_num <= 3:
+        if book_num <= 10:
             add_inventory("fish book")
-        elif book_num == 100:
+        elif book_num >= 99:
             add_inventory("wall lore book")
         else:
             add_inventory("book")
@@ -463,8 +463,6 @@ def one_six():
     time.sleep(n)
     print("Perhaps you should investigate.")
     time.sleep(n)
-    print("(This is on the border of v0.1.5 content, but there may still be more to do in previous rooms!)")
-    time.sleep(n)
     return room
 
 def one_six_examine(obj_examine):
@@ -496,6 +494,8 @@ def one_seven():
     print("You are in a room bulging from the end of the left space, in the big room.")
     time.sleep(n)
     print("There is a strange lever in the room.")
+    time.sleep(n)
+    print("(This is on the border of v0.2.0.1 content, but there may still be more to do in previous rooms!)")
     time.sleep(n)
     return room
 
@@ -605,8 +605,6 @@ def two_five():
     time.sleep(n)
     print("You now realise you have a lot to explore.")
     time.sleep(n)
-    print("(This is on the border of v0.1.5 content, but there may still be more to do in previous rooms!)")
-    time.sleep(n)
     return room
 
 
@@ -619,6 +617,8 @@ def two_six():
     print("To your east by a few spaces there appears to be an entrance to another corridor.")
     time.sleep(n)
     print("You have also seemed to reach one of the northern walls of this big room, save for the corridors you see.")
+    time.sleep(n)
+    print("(This is on the border of v0.2.0.1 content, but there may still be more to do in previous rooms!)")
     time.sleep(n)
     return room
 
@@ -905,7 +905,7 @@ def repeated_action(x, y, newx, newy, wall_counter):
     x = newx
     y = newy
     print("Your co-ordinates are", str(x)+", "+str(y))
-    action = input("What to do? (interact, move, use, examine, inventory): ")
+    action = input("What to do? (interact, move, use, examine, inventory, stop): ")
     if action == "move":
         move(x, y, room)
     elif action == "examine":
@@ -968,6 +968,7 @@ while game_on == False:
                     exec(x)
                     #eval(a+"="+x)
                     count = count + 1
+                general_backup = wall_counter = 0
                 game_load()
             exec("game_on = True")
         else:
