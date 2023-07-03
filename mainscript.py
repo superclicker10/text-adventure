@@ -7,7 +7,7 @@ from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "34", "35", "36"]
+restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "44", "45", "46"]
 book_num = random.randint(1, 100)
 action = None
 n = 1
@@ -27,6 +27,8 @@ general_backup = 0
 one_seven_switch_done = False
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done= False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
+three_four_wall_done = three_six_wall_done = False
+three_four_wall_backup = three_six_wall_backup = 0
 game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_seven_switch_done]
 game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_seven_switch_done"]
 
@@ -495,7 +497,7 @@ def one_seven():
     time.sleep(n)
     print("There is a strange lever in the room.")
     time.sleep(n)
-    print("(This is on the border of v0.2.0.1 content, but there may still be more to do in previous rooms!)")
+    print("(This is on the border of v0.2.1 content, but there may still be more to do in previous rooms!)")
     time.sleep(n)
     return room
 
@@ -618,8 +620,6 @@ def two_six():
     time.sleep(n)
     print("You have also seemed to reach one of the northern walls of this big room, save for the corridors you see.")
     time.sleep(n)
-    print("(This is on the border of v0.2.0.1 content, but there may still be more to do in previous rooms!)")
-    time.sleep(n)
     return room
 
 def two_six_wall():
@@ -635,6 +635,79 @@ def two_six_wall():
         wall_message_check(two_six_wall_backup)
     two_six_wall_done = True
     return wall_counter, two_six_wall_done
+
+
+
+def three_four():
+    global room
+    room = "three_four"
+    print("To your south-east is the lectern room.")
+    time.sleep(n)
+    print("Overall you are further along the corridor.")
+    time.sleep(n)
+    print("A few spaces further east of you is what looks to be a corridor entrance.")
+    time.sleep(n)
+    print("(This is on the border of v0.2.1 content (3, y), but there may still be more to do in previous rooms!)")
+    time.sleep(n)
+    return room
+
+def three_four_wall():
+    global wall_counter
+    global three_four_wall_done
+    global three_four_wall_backup
+    global general_backup
+    if three_four_wall_done == False:
+        three_four_wall_backup = general_backup = wall_counter
+        wall_message_check(three_four_wall_backup)
+        wall_counter = wall_counter + 1
+    else:
+        wall_message_check(three_four_wall_backup)
+    three_four_wall_done = True
+    return wall_counter, three_four_wall_done
+
+
+
+
+def three_five():
+    global room
+    room = "three_five"
+    print("You are further centered in the huge room.")
+    time.sleep(n)
+    print("There is little to do in the centre.")
+    time.sleep(n)
+    print("(This is on the border of v0.2.1 content (3, y), but there may still be more to do in previous rooms!)")
+    time.sleep(n)
+    return room
+
+
+
+def three_six():
+    global room
+    room = "three_six"
+    print("On your immediate east is the entrance to a corridor going north.")
+    time.sleep(n)
+    print("It may have some clues towards opening another door.")
+    time.sleep(n)
+    print("(This is on the border of v0.2.1 content (3, y), but there may still be more to do in previous rooms!)")
+    time.sleep(n)
+    return room
+
+def three_six_wall():
+    global wall_counter
+    global three_six_wall_done
+    global three_six_wall_backup
+    global general_backup
+    if three_six_wall_done == False:
+        three_six_wall_backup = general_backup = wall_counter
+        wall_message_check(three_six_wall_backup)
+        wall_counter = wall_counter + 1
+    else:
+        wall_message_check(three_six_wall_backup)
+    three_six_wall_done = True
+    return wall_counter, three_six_wall_done
+
+
+
 
 def oob(x, y, newx, newy):
     if newx <= -1 or newy <= -1:
@@ -821,6 +894,12 @@ def interact(room):
         elif room == "two_six":
             if obj_interact == "wall":
                 two_six_wall()
+        elif room == "three_four":
+            if obj_interact == "wall":
+                three_four_wall()
+        elif room == "three_six":
+            if obj_interact == "wall":
+                three_six_wall()
 
 def inventory_general():
     choice = input("View or drop item from inventory?: ")
@@ -936,9 +1015,9 @@ def repeated_action(x, y, newx, newy, wall_counter):
 def game_load():
     global game_on
     time_check()
-    print("Enter 'stop' to stop the game.")
+    print("Enter 'stop' to exit and save your game.")
     time.sleep(1)
-    print("(Current boundaries for this version are (2, 6) and (1, 7). Nothing is more east or more north than those points.)")
+    print("(Current boundaries for this version are (3, y) and (0, y) apart from (0, 4) and (0, 0). Nothing is more east or more north than those points.)")
     time.sleep(1)
     game_on = True
     return game_on
