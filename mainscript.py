@@ -24,13 +24,14 @@ one_one_door_interact_state = False
 bookshelf_interact_state = False
 wall_counter = 0
 general_backup = 0
+one_two_door_interact = False
 one_seven_switch_done = False
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done= False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
-three_four_wall_done = three_six_wall_done = False
-three_four_wall_backup = three_six_wall_backup = 0
-game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_seven_switch_done]
-game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_seven_switch_done"]
+zero_four_wall_done = three_four_wall_done = three_six_wall_done = False
+zero_four_wall_backup = three_four_wall_backup = three_six_wall_backup = 0
+game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
 
 def time_check():
     global n
@@ -69,6 +70,26 @@ def lobby():
     time.sleep(n)
     return room
 
+def lobby_interact(obj_interact):
+    global lobby_wall
+    global lobby_wall_backup
+    global wall_counter
+    global general_backup
+    if obj_interact == "wall":
+        if lobby_wall == False:
+            lobby_wall_backup = general_backup = wall_counter
+            wall_message_check(lobby_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(lobby_wall_backup)
+            lobby_wall = True
+            return lobby_wall, wall_counter
+    else:
+        print("You can't interact with that.")
+        time.sleep(1)
+
+
+
 
 
 def zero_four():
@@ -82,13 +103,31 @@ def zero_four():
     time.sleep(n)
     return room
 
-def zero_four_note_interact(inventory):
-    if "note" not in inventory:
-        print("You pick up the note.")
-        time.sleep(n)
-        add_inventory("note")
+def zero_four_interact(obj_interact):
+    global inventory
+    if obj_interact == "note":
+        if "note" not in inventory:
+            print("You pick up the note.")
+            time.sleep(n)
+            add_inventory("note")
+        else:
+            print("You have already picked up the note.")
+    elif obj_interact == "wall":
+        global wall_counter
+        global zero_four_wall_done
+        global zero_four_wall_backup
+        global general_backup
+        if zero_four_wall_done == False:
+            one_one_wall_backup = general_backup = wall_counter
+            wall_message_check(zero_four_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(zero_four_wall_backup)
+        zero_four_wall_done = True
+        return wall_counter, zero_four_wall_done
     else:
-        print("You have already picked up the note.")
+        print("You can't interact with that.")
+        time.sleep(n)
 
 def note_use():
     print("'Three switches - '")
@@ -110,6 +149,7 @@ def zero_four_examine(obj_examine):
         time.sleep(n)
     else:
         print("You can't examine that.")
+
 
 
         
@@ -159,50 +199,59 @@ def book_room_examine(obj_examine):
         print("You can't examine that.")
         time.sleep(n)
         
-def book_room_door_interact(one_one_door_interact_state):
-    if one_one_door_interact_state == False:
-        print("You open the door wider, giving you a clear view of the corridor ahead.")
-        time.sleep(n)
-        print("Even though you already could've gone through it.")
-        time.sleep(n)
-    else:
-        print("You close the door back to where it was originally.")
-        time.sleep(n)
-
-def book_room_bookshelf(bookshelf_interact_state):
-    if bookshelf_interact_state == False:
-        print("You take a book from one of the shelves, hoping it might be useful.")
-        time.sleep(n)
-        if book_num <= 10:
-            add_inventory("fish book")
-        elif book_num >= 99:
-            add_inventory("wall lore book")
-        else:
-            add_inventory("book")
+def book_room_interact(obj_interact):
+    global one_one_door_interact_state
+    global bookshelf_interact_state
+    global repeat_book
+    if obj_interact == "door":
+        if one_one_door_interact_state == False:
+            print("You open the door wider, giving you a clear view of the corridor ahead.")
             time.sleep(n)
-        bookshelf_interact_state = True
-        return bookshelf_interact
-    elif inventory == []:
-        print("You take another book from one of the shelves, hoping it might be useful.")
-        time.sleep(1)
-        add_inventory("book")
+            print("Even though you already could've gone through it.")
+            time.sleep(n)
+            one_one_door_interact_state = True                      #TEST THIS FUNCTIONALITY
+        else:
+            print("You close the door back to where it was originally.")
+            time.sleep(n)
+            one_one_door_interact_state = False
+    elif obj_interact == "bookshelf":
+        if bookshelf_interact_state == False and (("book" not in inventory) or ("fish book" not in inventory) or ("wall lore book" not in inventory)):
+            print("You take a book from one of the shelves, hoping it might be useful.")
+            time.sleep(n)
+            if book_num <= 10:
+                add_inventory("fish book")
+            elif book_num >= 99:
+                add_inventory("wall lore book")
+            else:
+                add_inventory("book")
+                time.sleep(n)
+            bookshelf_interact_state = True
+            return bookshelf_interact
+        elif bookshelf_interact_state == True:
+            for x in inventory:
+                if x == "book" or x == "fish book" or x == "wall lore book":
+                    print("You have no need for another book.")
+                    time.sleep(n)
+                    bookshelf_interact_state = False
+        else:
+            print("You have no need for another book.")
+            time.sleep(n)
+    elif obj_interact == "wall":
+        global wall_counter
+        global bookshelf_wall
+        global bookshelf_wall_backup
+        global general_backup
+        if bookshelf_wall == False:
+            bookshelf_wall_backup = general_backup = wall_counter
+            wall_message_check(bookshelf_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(bookshelf_wall_backup)
+        bookshelf_wall = True
+        return wall_counter, bookshelf_wall
     else:
-        print("You have no need for another book.")
+        print("You can't interact with that.")
         time.sleep(n)
-
-def book_room_wall():
-    global wall_counter
-    global bookshelf_wall
-    global bookshelf_wall_backup
-    global general_backup
-    if bookshelf_wall == False:
-        bookshelf_wall_backup = general_backup = wall_counter
-        wall_message_check(bookshelf_wall_backup)
-        wall_counter = wall_counter + 1
-    else:
-        wall_message_check(bookshelf_wall_backup)
-    bookshelf_wall = True
-    return wall_counter, bookshelf_wall
 
 def book_use(room):
     if room == "lectern_room":
@@ -257,20 +306,24 @@ def one_one_corridor():
     time.sleep(n)
     return room
 
-def one_one_wall():
-    global wall_counter
-    global one_one_wall_done
-    global one_one_wall_backup
-    global general_backup
-    if one_one_wall_done == False:
-        one_one_wall_backup = general_backup = wall_counter
-        wall_message_check(one_one_wall_backup)
-        wall_counter = wall_counter + 1
+def one_one_corridor_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global one_one_wall_done
+        global one_one_wall_backup
+        global general_backup
+        if one_one_wall_done == False:
+            one_one_wall_backup = general_backup = wall_counter
+            wall_message_check(one_one_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(one_one_wall_backup)
+        one_one_wall_done = True
+        return wall_counter, one_one_wall_done
     else:
-        wall_message_check(one_one_wall_backup)
-    one_one_wall_done = True
-    return wall_counter, one_one_wall_done
-
+        print("You can't interact with that.")
+        time.sleep(n)
+        
 def one_one_corridor_examine(obj_examine):
     if obj_examine == "door":
         print("Going back to the last room would allow you to get a better look at the door.")
@@ -304,33 +357,38 @@ def one_two_corridor():
     time.sleep(n)
     return room
 
-def one_two_wall():      
-    global wall_counter
-    global one_two_wall_done
-    global one_two_wall_backup
-    global general_backup
-    if one_two_wall_done == False:
-        one_two_wall_backup = general_backup = wall_counter
-        wall_message_check(one_two_wall_backup)
-        wall_counter = wall_counter + 1
+def one_two_corridor_interact(obj_interact):
+    global one_two_door_interact
+    if obj_interact == "door":
+        if one_two_door_interact == False:
+            print("You open the door wider.")
+            time.sleep(n)
+            print("You can see a big room full of side rooms and posts in the middle.")
+            time.sleep(n)
+            print("It looks intriguing.")
+            time.sleep(n)
+            one_two_door_interact = True
+        else:
+            print("You close the door back to where it was originally.")
+            time.sleep(n)
+            one_two_door_interact = False
+            return one_two_door_interact
+    elif obj_interact == "wall":
+        global wall_counter
+        global one_two_wall_done
+        global one_two_wall_backup
+        global general_backup
+        if one_two_wall_done == False:
+            one_two_wall_backup = general_backup = wall_counter
+            wall_message_check(one_two_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(one_two_wall_backup)
+        one_two_wall_done = True
+        return wall_counter, one_two_wall_done
     else:
-        wall_message_check(one_two_wall_backup)
-    one_two_wall_done = True
-    return wall_counter, one_two_wall_done
-
-def one_two_door():
-    if one_two_door_state == False:
-        print("You open the door wider.")
+        print("You can't interact with that.")
         time.sleep(n)
-        print("You can see a big room full of side rooms and posts in the middle.")
-        time.sleep(n)
-        print("It looks intriguing.")
-        time.sleep(n)
-    else:
-        print("You close the door back to where it was originally.")
-        time.sleep(n)
-        one_two_door_interact = False
-        return door_interact
 
 def one_two_corridor_edge():
     print("A door that leads to another room to your north.")
@@ -361,19 +419,23 @@ def one_three():
     time.sleep(n)
     return room
 
-def one_three_wall():
-    global wall_counter
-    global one_three_wall_done
-    global lectern_room_wall_backup
-    global general_backup
-    if one_three_wall_done == False:
-        one_three_wall_backup = general_backup = wall_counter
-        wall_message_check(one_three_wall_backup)
-        wall_counter = wall_counter + 1
+def one_three_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global one_three_wall_done
+        global lectern_room_wall_backup
+        global general_backup
+        if one_three_wall_done == False:
+            one_three_wall_backup = general_backup = wall_counter
+            wall_message_check(one_three_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(one_three_wall_backup)
+        one_three_wall_done = True
+        return wall_counter, one_three_wall_done
     else:
-        wall_message_check(one_three_wall_backup)
-    one_three_wall_done = True
-    return wall_counter, one_three_wall_done
+        print("You can't interact with that.")
+        time.sleep(n)
 
 def one_three_examine(obj_examine):
     if obj_examine == "wall":
@@ -508,34 +570,37 @@ def one_seven_examine(obj_examine):
         print("It may help you to open one of the doors to your south-west.")
         time.sleep(n)
 
-def one_seven_wall():
-    global wall_counter
-    global one_seven_wall_done
-    global one_seven_wall_backup
-    global general_backup
-    if one_seven_wall_done == False:
-        one_seven_wall_backup = general_backup = wall_counter
-        wall_message_check(one_seven_wall_backup)
-        wall_counter = wall_counter + 1
+def one_seven_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global one_seven_wall_done
+        global one_seven_wall_backup
+        global general_backup
+        if one_seven_wall_done == False:
+            one_seven_wall_backup = general_backup = wall_counter
+            wall_message_check(one_seven_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(one_seven_wall_backup)
+        one_seven_wall_done = True
+        return wall_counter, one_seven_wall_done
+    elif obj_interact == "lever":
+        global one_seven_switch_done
+        if one_seven_switch_done == False:
+            print("You turn the lever.")
+            time.sleep(n)
+            print("With a crank, and a loud noise, something opens behind you.")
+            time.sleep(n)
+            print("Perhaps you should go investigate.")
+            time.sleep(n)
+            one_seven_switch_done = True
+            restricted_pos.remove("04")
+        else:
+            print("You have already turned the lever.")
+            time.sleep(n)
     else:
-        wall_message_check(one_seven_wall_backup)
-    one_seven_wall_done = True
-    return wall_counter, one_seven_wall_done
-
-def one_seven_switch():
-    global one_seven_switch_done
-    if one_seven_switch_done == False:
-        print("You turn the lever.")
-        time.sleep(n)
-        print("With a crank, and a loud noise, something opens behind you.")
-        time.sleep(n)
-        print("Perhaps you should go investigate.")
-        time.sleep(n)
-        one_seven_switch_done = True
-        restricted_pos.remove("04")
-    else:
-        print("You have already turned the lever.")
-        time.sleep(n)
+        print("You can't interact with that.")
+        
 
 
         
@@ -550,19 +615,28 @@ def lectern_room():
     time.sleep(n)
     return room
 
-def lectern_wall():
-    global wall_counter
-    global lectern_wall_done
-    global lectern_room_wall_backup
-    global general_backup
-    if lectern_wall_done == False:
-        lectern_room_wall_backup = general_backup = wall_counter
-        wall_message_check(lectern_room_wall_backup)
-        wall_counter = wall_counter + 1
+def lectern_room_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global lectern_wall_done
+        global lectern_room_wall_backup
+        global general_backup
+        if lectern_wall_done == False:
+            lectern_room_wall_backup = general_backup = wall_counter
+            wall_message_check(lectern_room_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(lectern_room_wall_backup)
+        lectern_wall_done = True
+        return wall_counter, lectern_wall_done
+    elif obj_interact == "lectern":
+        print("You can't pick up the lectern. It's too heavy.")
+        time.sleep(n)
+        print("Perhaps using the book on it will yield a different result.")
+        time.sleep(n)
     else:
-        wall_message_check(lectern_room_wall_backup)
-    lectern_wall_done = True
-    return wall_counter, lectern_wall_done
+        print("You can't interact with that.")
+        time.sleep(n)
 
 def lectern_room_examine(obj_examine):
     if obj_examine == "lectern":
@@ -573,12 +647,6 @@ def lectern_room_examine(obj_examine):
     elif obj_examine == "wall":
         print("It's. A. Wall.")
         time.sleep(n)
-
-def lectern_interact():
-    print("You can't pick up the lectern. It's too heavy.")
-    time.sleep(n)
-    print("Perhaps using the book on it will yield a different result.")
-    time.sleep(n)
 
 
 
@@ -622,20 +690,23 @@ def two_six():
     time.sleep(n)
     return room
 
-def two_six_wall():
-    global wall_counter
-    global two_six_wall_done
-    global two_six_wall_backup
-    global general_backup
-    if two_six_wall_done == False:
-        two_six_wall_backup = general_backup = wall_counter
-        wall_message_check(two_six_wall_backup)
-        wall_counter = wall_counter + 1
+def two_six_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global two_six_wall_done
+        global two_six_wall_backup
+        global general_backup
+        if two_six_wall_done == False:
+            two_six_wall_backup = general_backup = wall_counter
+            wall_message_check(two_six_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(two_six_wall_backup)
+        two_six_wall_done = True
+        return wall_counter, two_six_wall_done
     else:
-        wall_message_check(two_six_wall_backup)
-    two_six_wall_done = True
-    return wall_counter, two_six_wall_done
-
+        print("You can't interact with that.")
+        
 
 
 def three_four():
@@ -651,19 +722,22 @@ def three_four():
     time.sleep(n)
     return room
 
-def three_four_wall():
-    global wall_counter
-    global three_four_wall_done
-    global three_four_wall_backup
-    global general_backup
-    if three_four_wall_done == False:
-        three_four_wall_backup = general_backup = wall_counter
-        wall_message_check(three_four_wall_backup)
-        wall_counter = wall_counter + 1
+def three_four_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global three_four_wall_done
+        global three_four_wall_backup
+        global general_backup
+        if three_four_wall_done == False:
+            three_four_wall_backup = general_backup = wall_counter
+            wall_message_check(three_four_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(three_four_wall_backup)
+        three_four_wall_done = True
+        return wall_counter, three_four_wall_done
     else:
-        wall_message_check(three_four_wall_backup)
-    three_four_wall_done = True
-    return wall_counter, three_four_wall_done
+        print("You can't interact with that.")
 
 
 
@@ -692,19 +766,22 @@ def three_six():
     time.sleep(n)
     return room
 
-def three_six_wall():
-    global wall_counter
-    global three_six_wall_done
-    global three_six_wall_backup
-    global general_backup
-    if three_six_wall_done == False:
-        three_six_wall_backup = general_backup = wall_counter
-        wall_message_check(three_six_wall_backup)
-        wall_counter = wall_counter + 1
+def three_six_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global three_six_wall_done
+        global three_six_wall_backup
+        global general_backup
+        if three_six_wall_done == False:
+            three_six_wall_backup = general_backup = wall_counter
+            wall_message_check(three_six_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(three_six_wall_backup)
+        three_six_wall_done = True
+        return wall_counter, three_six_wall_done
     else:
-        wall_message_check(three_six_wall_backup)
-    three_six_wall_done = True
-    return wall_counter, three_six_wall_done
+        print("You can't interact with that.")
 
 
 
@@ -803,13 +880,15 @@ def examine(room):
             y = locations[x]
             if newx == y.xpos and newy == y.ypos:
                 eval(y.name+"_examine(obj_examine)")
-    
-
+"""    
+(level_name)interact():
+   (obj_interact choice):
+        (text for choice)
+"""
+"""
+eval(level_name_interact())
+"""
 def interact(room):
-    global wall_counter
-    global lobby_wall
-    global general_backup
-    global lobby_wall_backup
     global interact_done
     for x in no_interact:
         interact_done = False
@@ -820,87 +899,18 @@ def interact(room):
             break
     if interact_done == False:
         obj_interact = input("What would you like to interact with?: ")
-        if room == "lobby":
-            if obj_interact == "wall":
-                if lobby_wall == False:
-                    lobby_wall_backup = general_backup = wall_counter
-                    wall_message_check(lobby_wall_backup)
-                    wall_counter = wall_counter + 1
-                else:
-                    wall_message_check(lobby_wall_backup)
-                lobby_wall = True
-                return lobby_wall, wall_counter
-            else:
-                print("You can't interact with that.")
-                time.sleep(1)
-        elif room == "zero_four":
-            if obj_interact == "note":
-                zero_four_note_interact(inventory)
-        elif room == "book_room":
-            global one_one_door_interact_state
-            global bookshelf_interact_state
-            if obj_interact == "door":
-                book_room_door_interact(one_one_door_interact_state)
-                if one_one_door_interact_state == True:
-                    one_one_door_interact_state == False
-                else:
-                    one_one_door_interact_state = True
-            elif obj_interact == "bookshelf":
-                book_room_bookshelf(bookshelf_interact_state)
-                bookshelf_interact_state = True
-                return bookshelf_interact_state
-            elif obj_interact == "hole":
-                hole_ending_sequence()
-            elif obj_interact == "wall":
-                book_room_wall()
-            else:
-                print("You can't interact with that.")
-                time.sleep(n)
-        elif room == "one_one_corridor":
-            if obj_interact == "wall":
-                one_one_wall()
-            else:
-                print("You can't interact with that.")
-                time.sleep(n)
-        elif room == "one_two_corridor":
-            if obj_interact == "door":
-                one_two_door()
-            elif obj_interact == "wall":
-                one_two_wall()
-            else:
-                print("You can't interact with that.")
-                time.sleep(n)
-        elif room == "one_three":
-            if obj_interact == "wall":
-                one_three_wall()
-            else:
-                print("You can't interact with that.")
-                time.sleep(n)
-        elif room == "one_seven":
-            if obj_interact == "wall":
-                one_seven_wall()
-            elif obj_interact == "lever":
-                one_seven_switch()
-            else:
-                print("You can't interact with that.")
-        elif room == "lectern_room":
-            if obj_interact == "wall":
-                lectern_wall()
-            elif obj_interact == "lectern":
-                lectern_interact()
-            else:
-                print("You can't interact with that.")
-                time.sleep(n)
-        elif room == "two_six":
-            if obj_interact == "wall":
-                two_six_wall()
-        elif room == "three_four":
-            if obj_interact == "wall":
-                three_four_wall()
+        for x in range(0, len(locations)):
+            y = locations[x]
+            if newx == y.xpos and newy == y.ypos:
+                eval(y.name+"_interact(obj_interact)")
+    """                                        #REFORM INTERACT MECHANICS TO REDUCE THE LINES USED
+    if interact_done == False:
         elif room == "three_six":
             if obj_interact == "wall":
                 three_six_wall()
-
+            else:
+                print("You can't interact with that.")
+    """
 def inventory_general():
     choice = input("View or drop item from inventory?: ")
     if choice == "view":
@@ -925,10 +935,13 @@ def add_inventory(item):
         inventory.append(item)
 
 def drop_item(item):
+    global bookshelf_interact_state
     for x in inventory:
         if item == x:
             inventory.remove(item)
             print("Dropped", item, "from inventory!")
+            if item == "book" or item == "fish book" or item == "wall lore book":
+                bookshelf_interact_state = False
             time.sleep(n)
             break
         else:
