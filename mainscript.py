@@ -7,16 +7,16 @@ from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "44", "45", "46"]
+restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "43", "47", "54", "55", "56"]
 book_num = random.randint(1, 100)
 action = None
 n = 1
 count = 0
 game_on = False
 x = 0
-newx = 0
+newx = 4
 y = 0
-newy = 0
+newy = 4
 room = "lobby"
 inventory = []
 ending_condition = False
@@ -28,8 +28,8 @@ one_two_door_interact = False
 one_seven_switch_done = False
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done= False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
-zero_four_wall_done = three_four_wall_done = three_six_wall_done = False
-zero_four_wall_backup = three_four_wall_backup = three_six_wall_backup = 0
+zero_four_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = False
+zero_four_wall_backup = three_four_wall_backup = three_six_wall_backup = four_four_wall_backup = 0
 game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
 game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
 
@@ -559,8 +559,6 @@ def one_seven():
     time.sleep(n)
     print("There is a strange lever in the room.")
     time.sleep(n)
-    print("(This is on the border of v0.2.1 content, but there may still be more to do in previous rooms!)")
-    time.sleep(n)
     return room
 
 def one_seven_examine(obj_examine):
@@ -782,10 +780,138 @@ def three_six_interact(obj_interact):
         return wall_counter, three_six_wall_done
     else:
         print("You can't interact with that.")
+        time.sleep(2)
 
 
 
+def four_four():
+    global room
+    room = "four_four"
+    if "key" not in inventory:
+        print("You suddenly see a huge barrier appear in front of you, blocking the path.")
+        time.sleep(n)
+        print("There is a long corridor to your north.")
+        time.sleep(n)
+        print("Perhaps it might be worth an investigation.")
+        time.sleep(n)
+    else:
+        print("You are at the border of where the barrier used to be.")
+        time.sleep(n)
+        print("There is a corridor to the south-east of you.")
+        time.sleep(n)
+    return room
 
+def four_four_edge():
+    if "key" not in inventory:
+        print("A huge barrier with details examining may reveal.")
+        time.sleep(n)
+    else:
+        print("There are no edges to examine in this room.")
+        time.sleep(n)
+
+def four_four_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global four_four_wall_done
+        global four_four_wall_backup
+        global general_backup
+        if four_four_wall_done == False:
+            four_four_wall_backup = general_backup = wall_counter
+            wall_message_check(four_four_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(four_four_wall_backup)
+        four_four_wall_done = True
+        return wall_counter, four_four_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
+
+def four_four_examine(obj_examine):
+    if obj_examine == "barrier" and "key" not in inventory:
+        print("A huge barrier blocking the path to the rest of the space.")
+        time.sleep(n)
+        print("However, it does look like it can be opened using a remote system, or a key.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+
+
+def four_five():
+    global room
+    room = "four_five"
+    if "key" not in inventory:
+        print("You suddenly see a huge barrier appear in front of you, blocking the path.")
+        time.sleep(n)
+        print("You are a bit closer to the entrance of the northern corridor.")
+        time.sleep(n)
+        print("Perhaps it might be worth an investigation.")
+        time.sleep(n)
+    else:
+        print("You are at the border of where the barrier used to be.")
+        time.sleep(n)
+        print("You are in the middle of the big space.")
+        time.sleep(n)
+    return room
+
+def four_five_edge():
+    if "key" not in inventory:
+        print("A huge barrier with details examining may reveal.")
+        time.sleep(n)
+    else:
+        print("There are no edges to examine in this room.")
+        time.sleep(n)
+
+def four_five_examine(obj_examine):
+    if obj_examine == "barrier" and "key" not in inventory:
+        print("A huge barrier blocking the path to the rest of the space.")
+        time.sleep(n)
+        print("It looks like it can be opened using a remote system.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+        
+
+
+
+def four_six():
+    global room
+    room = "four_six"
+    if "key" not in inventory:
+        print("You are at the entrance to the northern corridor.")
+        time.sleep(n)
+        print("The huge barrier still looms over you to your east.")
+        time.sleep(n)
+    else:
+        print("You are at the entrance to the northern corridor.")
+        time.sleep(n)
+        print("You are also at the border of where the barrier used to be.")
+        time.sleep(n)
+
+def four_six_edge():
+    if "key" not in inventory:
+        print("A huge barrier with details examining may reveal.")
+        time.sleep(n)
+    else:
+        print("There are no edges to examine in this room.")
+        time.sleep(n)
+
+def four_six_examine(obj_examine):
+    if obj_examine == "barrier" and "key" not in inventory:
+        print("A huge barrier blocking the path to the rest of the space.")
+        time.sleep(n)
+        print("It looks like it can be opened using a remote system.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+
+
+        
 def oob(x, y, newx, newy):
     if newx <= -1 or newy <= -1:
         print("All negative co-ordinates are out of bounds.")
@@ -880,14 +1006,7 @@ def examine(room):
             y = locations[x]
             if newx == y.xpos and newy == y.ypos:
                 eval(y.name+"_examine(obj_examine)")
-"""    
-(level_name)interact():
-   (obj_interact choice):
-        (text for choice)
-"""
-"""
-eval(level_name_interact())
-"""
+
 def interact(room):
     global interact_done
     for x in no_interact:
@@ -903,14 +1022,7 @@ def interact(room):
             y = locations[x]
             if newx == y.xpos and newy == y.ypos:
                 eval(y.name+"_interact(obj_interact)")
-    """                                        #REFORM INTERACT MECHANICS TO REDUCE THE LINES USED
-    if interact_done == False:
-        elif room == "three_six":
-            if obj_interact == "wall":
-                three_six_wall()
-            else:
-                print("You can't interact with that.")
-    """
+                
 def inventory_general():
     choice = input("View or drop item from inventory?: ")
     if choice == "view":
@@ -1028,15 +1140,15 @@ def repeated_action(x, y, newx, newy, wall_counter):
 def game_load():
     global game_on
     time_check()
-    print("Enter 'stop' to exit and save your game.")
+    print("Enter 'stop' to exit and save your game. NOTE: CLOSING DIRECTLY DOES NOT SAVE")
     time.sleep(1)
-    print("(Current boundaries for this version are (3, y) and (0, y) apart from (0, 4) and (0, 0). Nothing is more east or more north than those points.)")
+    print("(Current boundaries for this version are (4, y) up to (4, 7) and (0, y) apart from (0, 4) and (0, 0). Nothing is more east or more north than those points.)")
     time.sleep(1)
     game_on = True
     return game_on
     
 while game_on == False:
-    start = input("Turn game on?: ")
+    start = input("Turn game on? (yes/no): ")
     if start == "yes":
         load = input("Start new or load file? (new, load): ")
         if load == "new":
