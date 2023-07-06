@@ -20,14 +20,15 @@ three_six = location(3, 6, "three_six") # no edges
 four_four = location(4, 4, "four_four") # east edge
 four_five = location(4, 5, "four_five") # east edge
 four_six = location(4, 6, "four_six") # east edge
+four_seven = location(4, 7, "four_seven") # no edges
 
 #book room has edges north, east, and south-east leading to door, bookshelf and hole respectively
 
 locations = [lobby, zero_four, book_room, one_one_corridor, one_two_corridor, one_three, one_four, one_five, one_six, one_seven, lectern_room, two_four, two_five, two_six, three_four, three_five, three_six]
-locations.extend([four_four, four_five, four_six])
+locations.extend([four_four, four_five, four_six, four_seven])
 multiple_edges = [book_room, one_three, one_six]
-no_edges = [lobby, one_seven, lectern_room, two_five, two_six, three_four, three_five, three_six]
-no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six]
+no_edges = [lobby, one_seven, lectern_room, two_five, two_six, three_four, three_five, three_six, four_seven]
+no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six, four_seven]
 no_interact = [one_four, one_six, one_five, two_four, two_five, three_five, four_five, four_six]
 
 door_interact = False

@@ -7,16 +7,16 @@ from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "43", "47", "54", "55", "56"]
+restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "43", "48", "54", "55", "56"]
 book_num = random.randint(1, 100)
 action = None
 n = 1
 count = 0
 game_on = False
 x = 0
-newx = 4
+newx = 0
 y = 0
-newy = 4
+newy = 0
 room = "lobby"
 inventory = []
 ending_condition = False
@@ -28,8 +28,8 @@ one_two_door_interact = False
 one_seven_switch_done = False
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done= False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
-zero_four_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = False
-zero_four_wall_backup = three_four_wall_backup = three_six_wall_backup = four_four_wall_backup = 0
+zero_four_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = four_seven_wall_done = False
+zero_four_wall_backup = three_four_wall_backup = three_six_wall_backup = four_four_wall_backup = four_seven_wall_backup = 0
 game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
 game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
 
@@ -911,6 +911,34 @@ def four_six_examine(obj_examine):
 
 
 
+def four_seven():
+    global room
+    room = "four_seven"
+    print("You have entered the northern corridor.")
+    time.sleep(n)
+    print("At the tip of it appears to be another object.")
+    time.sleep(n)
+    print("Perhaps it'll get you closer to opening that barrier.")
+    time.sleep(n)
+    return room
+
+def four_seven_wall(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global four_seven_wall_done
+        global four_seven_wall_backup
+        global general_backup
+        if four_seven_wall_done == False:
+            four_four_wall_backup = general_backup = wall_counter
+            wall_message_check(four_seven_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(four_seven_wall_backup)
+        four_seven_wall_done = True
+        return wall_counter, four_seven_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
         
 def oob(x, y, newx, newy):
     if newx <= -1 or newy <= -1:
