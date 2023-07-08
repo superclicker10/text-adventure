@@ -7,7 +7,7 @@ from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "43", "48", "54", "55", "56"]
+restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "43", "410", "53", "54", "55", "56", "57", "58", "59", "64", "65", "66",]
 book_num = random.randint(1, 100)
 action = None
 n = 1
@@ -26,12 +26,15 @@ wall_counter = 0
 general_backup = 0
 one_two_door_interact = False
 one_seven_switch_done = False
+four_nine_switch_done = False
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done= False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
-zero_four_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = four_seven_wall_done = False
-zero_four_wall_backup = three_four_wall_backup = three_six_wall_backup = four_four_wall_backup = four_seven_wall_backup = 0
+zero_four_wall_done = zero_five_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = four_seven_wall_done = four_eight_wall_done = four_nine_wall_done = False
+zero_four_wall_backup = zero_five_wall_backup = three_four_wall_backup = three_six_wall_backup = four_four_wall_backup = four_seven_wall_backup = four_eight_backup_state = four_nine_wall_backup = 0
 game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+game_values.extend([four_nine_switch_done])
 game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+game_values_string.extend(["four_nine_switch_done"])
 
 def time_check():
     global n
@@ -86,7 +89,7 @@ def lobby_interact(obj_interact):
             return lobby_wall, wall_counter
     else:
         print("You can't interact with that.")
-        time.sleep(1)
+        time.sleep(n)
 
 
 
@@ -118,7 +121,7 @@ def zero_four_interact(obj_interact):
         global zero_four_wall_backup
         global general_backup
         if zero_four_wall_done == False:
-            one_one_wall_backup = general_backup = wall_counter
+            zero_four_wall_backup = general_backup = wall_counter
             wall_message_check(zero_four_wall_backup)
             wall_counter = wall_counter + 1
         else:
@@ -151,6 +154,43 @@ def zero_four_examine(obj_examine):
         print("You can't examine that.")
 
 
+
+def zero_five():
+    global room
+    room = "zero_five"
+    print("This is the second once locked room.")
+    time.sleep(n)
+    print("It contains a small, solitary key on the ground.")
+    time.sleep(n)
+    print("It might have something to do with the wall.")
+    time.sleep(n)
+
+def zero_five_interact(obj_interact):
+    global inventory
+    if obj_interact == "key":
+        if "key" not in inventory:
+            print("You pick up the key.")
+            time.sleep(n)
+            add_inventory("key")
+            #restricted_pos.remove("54", "55", "56")
+        else:
+            print("You have already picked up the key.")
+    elif obj_interact == "wall":
+        global wall_counter
+        global zero_five_wall_done
+        global zero_five_wall_backup
+        global general_backup
+        if zero_five_wall_done == False:
+            zero_five_wall_backup = general_backup = wall_counter
+            wall_message_check(zero_five_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(zero_five_wall_backup)
+        zero_five_wall_done = True
+        return wall_counter, zero_five_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
 
         
 def book_room():
@@ -716,8 +756,6 @@ def three_four():
     time.sleep(n)
     print("A few spaces further east of you is what looks to be a corridor entrance.")
     time.sleep(n)
-    print("(This is on the border of v0.2.1 content (3, y), but there may still be more to do in previous rooms!)")
-    time.sleep(n)
     return room
 
 def three_four_interact(obj_interact):
@@ -736,6 +774,7 @@ def three_four_interact(obj_interact):
         return wall_counter, three_four_wall_done
     else:
         print("You can't interact with that.")
+        time.sleep(n)
 
 
 
@@ -747,8 +786,6 @@ def three_five():
     time.sleep(n)
     print("There is little to do in the centre.")
     time.sleep(n)
-    print("(This is on the border of v0.2.1 content (3, y), but there may still be more to do in previous rooms!)")
-    time.sleep(n)
     return room
 
 
@@ -759,8 +796,6 @@ def three_six():
     print("On your immediate east is the entrance to a corridor going north.")
     time.sleep(n)
     print("It may have some clues towards opening another door.")
-    time.sleep(n)
-    print("(This is on the border of v0.2.1 content (3, y), but there may still be more to do in previous rooms!)")
     time.sleep(n)
     return room
 
@@ -780,7 +815,7 @@ def three_six_interact(obj_interact):
         return wall_counter, three_six_wall_done
     else:
         print("You can't interact with that.")
-        time.sleep(2)
+        time.sleep(n)
 
 
 
@@ -890,6 +925,7 @@ def four_six():
         time.sleep(n)
         print("You are also at the border of where the barrier used to be.")
         time.sleep(n)
+    return room
 
 def four_six_edge():
     if "key" not in inventory:
@@ -914,22 +950,22 @@ def four_six_examine(obj_examine):
 def four_seven():
     global room
     room = "four_seven"
-    print("You have entered the northern corridor.")
+    print("You enter the northern corridor.")
     time.sleep(n)
-    print("At the tip of it appears to be another object.")
+    print("There appears to be an object at the other end.")
     time.sleep(n)
-    print("Perhaps it'll get you closer to opening that barrier.")
+    print("You feel claustrophobic.")
     time.sleep(n)
     return room
 
-def four_seven_wall(obj_interact):
+def four_seven_interact(obj_interact):
     if obj_interact == "wall":
         global wall_counter
         global four_seven_wall_done
         global four_seven_wall_backup
         global general_backup
         if four_seven_wall_done == False:
-            four_four_wall_backup = general_backup = wall_counter
+            four_seven_wall_backup = general_backup = wall_counter
             wall_message_check(four_seven_wall_backup)
             wall_counter = wall_counter + 1
         else:
@@ -939,6 +975,94 @@ def four_seven_wall(obj_interact):
     else:
         print("You can't interact with that.")
         time.sleep(n)
+
+
+
+def four_eight():
+    global room
+    room = "four_eight"
+    print("You are further down the corridor.")
+    time.sleep(n)
+    print("The object is almost within view.")
+    time.sleep(n)
+    print("You still feel claustrophobic.")
+    time.sleep(n)
+    return room
+
+def four_eight_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global four_eight_wall_done
+        global four_eight_wall_backup
+        global general_backup
+        if four_eight_wall_done == False:
+            four_eight_wall_backup = general_backup = wall_counter
+            wall_message_check(four_eight_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(four_eight_wall_backup)
+        four_eight_wall_done = True
+        return wall_counter, four_eight_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
+
+
+
+def four_nine():
+    global room
+    room = "four_nine"
+    print("You arrive at a room with a strange object that looks like a lever.")
+    time.sleep(n)
+    print("Perhaps it can be used to open the locked doors.")
+    time.sleep(n)
+    print("You are at the end of the long corridor.")
+    time.sleep(n)
+    return room
+
+def four_nine_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global four_nine_wall_done
+        global four_nine_wall_backup
+        global general_backup
+        if four_nine_wall_done == False:
+            four_nine_wall_backup = general_backup = wall_counter
+            wall_message_check(four_nine_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(four_nine_wall_backup)
+        four_nine_wall_done = True
+        return wall_counter, four_nine_wall_done
+    elif obj_interact == "lever":
+        global four_nine_switch_done
+        if four_nine_switch_done == False:
+            print("You turn the lever.")
+            time.sleep(n)
+            print("With a crank, and a loud noise, something opens in the distance.")
+            time.sleep(n)
+            print("Perhaps you should go investigate.")
+            time.sleep(n)
+            four_nine_switch_done = True
+            restricted_pos.remove("05")
+        else:
+            print("You have already turned the lever.")
+            time.sleep(n)
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
+
+def four_nine_examine(obj_examine):
+    if obj_examine == "lever":
+        print("A fairly big mechanical lever.")
+        time.sleep(n)
+        print("It might help you open those locked doors at your west.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+
         
 def oob(x, y, newx, newy):
     if newx <= -1 or newy <= -1:
@@ -1170,7 +1294,7 @@ def game_load():
     time_check()
     print("Enter 'stop' to exit and save your game. NOTE: CLOSING DIRECTLY DOES NOT SAVE")
     time.sleep(1)
-    print("(Current boundaries for this version are (4, y) up to (4, 7) and (0, y) apart from (0, 4) and (0, 0). Nothing is more east or more north than those points.)")
+    print("(Current boundaries for this version are (5, y) and (0, y) apart from (0, 4), (0, 5) and (0, 0). Nothing is more east or more north than those points.)")
     time.sleep(1)
     game_on = True
     return game_on
@@ -1195,10 +1319,8 @@ while game_on == False:
                 time.sleep(1)
                 game_load()
             else:
-                #try:
                 for x in file:
                     exec(x)
-                    #eval(a+"="+x)
                     count = count + 1
                 general_backup = wall_counter = 0
                 game_load()

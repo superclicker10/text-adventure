@@ -1,7 +1,8 @@
 from location import *
 
 lobby = location(0, 0, "lobby") # no edges
-zero_four = location(0, 4, "zero_four") # east edge
+zero_four = location(0, 4, "zero_four") # no edges
+zero_five = location(0, 5, "zero_five") # no edges
 book_room = location(1, 0, "book_room") # north, east, south-east edges
 one_one_corridor = location(1, 1, "one_one_corridor") # south edge
 one_two_corridor = location(1, 2, "one_two_corridor") # north edge
@@ -21,14 +22,16 @@ four_four = location(4, 4, "four_four") # east edge
 four_five = location(4, 5, "four_five") # east edge
 four_six = location(4, 6, "four_six") # east edge
 four_seven = location(4, 7, "four_seven") # no edges
+four_eight = location(4, 8, "four_eight") # no edges
+four_nine = location(4, 9, "four_nine") # no edges
 
 #book room has edges north, east, and south-east leading to door, bookshelf and hole respectively
 
-locations = [lobby, zero_four, book_room, one_one_corridor, one_two_corridor, one_three, one_four, one_five, one_six, one_seven, lectern_room, two_four, two_five, two_six, three_four, three_five, three_six]
-locations.extend([four_four, four_five, four_six, four_seven])
+locations = [lobby, zero_four, zero_five, book_room, one_one_corridor, one_two_corridor, one_three, one_four, one_five, one_six, one_seven, lectern_room, two_four, two_five, two_six, three_four, three_five, three_six]
+locations.extend([four_four, four_five, four_six, four_seven, four_eight, four_nine])
 multiple_edges = [book_room, one_three, one_six]
-no_edges = [lobby, one_seven, lectern_room, two_five, two_six, three_four, three_five, three_six, four_seven]
-no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six, four_seven]
+no_edges = [lobby, zero_four, zero_five, one_seven, lectern_room, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, four_nine]
+no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight]
 no_interact = [one_four, one_six, one_five, two_four, two_five, three_five, four_five, four_six]
 
 door_interact = False

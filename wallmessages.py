@@ -100,3 +100,27 @@ def wall_16():
     time.sleep(1)
     print("Do you even know what that is?")
     time.sleep(1)
+
+def wall_17():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("You should read it if you're this committed.")
+    time.sleep(1)
+
+def wall_18():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Are you far in the game by now?")
+    time.sleep(1)
+    
+def wall_19():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("There's only so many walls before you need to progress further for more.")
+    time.sleep(1)
+
+def wall_20():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Have you got an ending yet?")
+    time.sleep(1)
