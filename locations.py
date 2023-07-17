@@ -3,6 +3,7 @@ from location import *
 lobby = location(0, 0, "lobby") # no edges
 zero_four = location(0, 4, "zero_four") # no edges
 zero_five = location(0, 5, "zero_five") # no edges
+zero_six = location(0, 6, "zero_six")
 book_room = location(1, 0, "book_room") # north, east, south-east edges
 one_one_corridor = location(1, 1, "one_one_corridor") # south edge
 one_two_corridor = location(1, 2, "one_two_corridor") # north edge
@@ -24,15 +25,22 @@ four_six = location(4, 6, "four_six") # east edge
 four_seven = location(4, 7, "four_seven") # no edges
 four_eight = location(4, 8, "four_eight") # no edges
 four_nine = location(4, 9, "four_nine") # no edges
+five_zero = location(5, 0, "five_zero") # no edges
+five_one = location(5, 1, "five_one") # no edges
+five_two = location(5, 2, "five_two") # no edges
+five_three = location(5, 3, "five_three") # no edges
+five_four = location(5, 4, "five_four") # no edges
+five_five = location(5, 5, "five_five") # no edges
+five_six = location(5, 6, "five_six") # no edges
 
 #book room has edges north, east, and south-east leading to door, bookshelf and hole respectively
 
-locations = [lobby, zero_four, zero_five, book_room, one_one_corridor, one_two_corridor, one_three, one_four, one_five, one_six, one_seven, lectern_room, two_four, two_five, two_six, three_four, three_five, three_six]
-locations.extend([four_four, four_five, four_six, four_seven, four_eight, four_nine])
+locations = [lobby, zero_four, zero_five, zero_six, book_room, one_one_corridor, one_two_corridor, one_three, one_four, one_five, one_six, one_seven, lectern_room, two_four, two_five, two_six, three_four, three_five, three_six]
+locations.extend([four_four, four_five, four_six, four_seven, four_eight, four_nine, five_zero, five_one, five_two, five_three, five_four, five_five, five_six])
 multiple_edges = [book_room, one_three, one_six]
-no_edges = [lobby, zero_four, zero_five, one_seven, lectern_room, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, four_nine]
-no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight]
-no_interact = [one_four, one_six, one_five, two_four, two_five, three_five, four_five, four_six]
+no_edges = [lobby, zero_four, zero_five, zero_six, one_seven, lectern_room, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, four_nine, five_zero, five_one, five_two, five_three, five_four, five_five, five_six]
+no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, five_one, five_two, five_three, five_four, five_five, five_six]
+no_interact = [one_four, one_six, one_five, two_four, two_five, three_five, four_five, five_four, four_six, five_five]
 
 door_interact = False
 bookshelf_interact = False

@@ -124,3 +124,21 @@ def wall_20():
     time.sleep(1)
     print("Have you got an ending yet?")
     time.sleep(1)
+
+def wall_21():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Or maybe you found this easter egg and then...")
+    time.sleep(1)
+    
+def wall_22():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("... decided to push it to its limits.")
+    time.sleep(1)
+
+def wall_23():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("You should complete the game if you haven't done so yet.")
+    time.sleep(1)
