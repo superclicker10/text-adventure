@@ -1,0 +1,9 @@
+Welcome to my game!
+
+To play open mainscript.py.
+
+If the game closes suddenly a bug has appeared.
+If this does occur, please use the "issues" tab on github to alert this to me.
+If you get stuck, that's most likely you, not the game.
+
+Have fun!
