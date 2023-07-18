@@ -142,3 +142,21 @@ def wall_23():
     time.sleep(1)
     print("You should complete the game if you haven't done so yet.")
     time.sleep(1)
+
+def wall_24():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Especially if you go this far for an easter egg.")
+    time.sleep(1)
+
+def wall_25():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("You should find all the items as well.")
+    time.sleep(1)
+
+def wall_26():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Might be difficult with the limiting inventory space.")
+    time.sleep(1)

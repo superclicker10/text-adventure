@@ -32,15 +32,24 @@ five_three = location(5, 3, "five_three") # no edges
 five_four = location(5, 4, "five_four") # no edges
 five_five = location(5, 5, "five_five") # no edges
 five_six = location(5, 6, "five_six") # no edges
+six_four = location(6, 4, "six_four") # no edges
+six_five = location(6, 5, "six_five") # no edges
+six_six = location(6, 6, "six_six") # no edges
+seven_four = location(7, 4, "seven_four") # no edges
+seven_five = location(7, 5, "seven_five") # no edges
+seven_six = location(7, 6, "seven_six") # no edges
 
 #book room has edges north, east, and south-east leading to door, bookshelf and hole respectively
 
 locations = [lobby, zero_four, zero_five, zero_six, book_room, one_one_corridor, one_two_corridor, one_three, one_four, one_five, one_six, one_seven, lectern_room, two_four, two_five, two_six, three_four, three_five, three_six]
-locations.extend([four_four, four_five, four_six, four_seven, four_eight, four_nine, five_zero, five_one, five_two, five_three, five_four, five_five, five_six])
+locations.extend([four_four, four_five, four_six, four_seven, four_eight, four_nine, five_zero, five_one, five_two, five_three, five_four, five_five, five_six, six_four, six_five, six_six])
+locations.extend([seven_four, seven_five, seven_six])
 multiple_edges = [book_room, one_three, one_six]
 no_edges = [lobby, zero_four, zero_five, zero_six, one_seven, lectern_room, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, four_nine, five_zero, five_one, five_two, five_three, five_four, five_five, five_six]
-no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, five_one, five_two, five_three, five_four, five_five, five_six]
-no_interact = [one_four, one_six, one_five, two_four, two_five, three_five, four_five, five_four, four_six, five_five]
+no_edges.extend([six_four, six_five, six_six, seven_four, seven_five, seven_six])
+no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, five_one, five_two, five_three, five_four, five_five, five_six, six_four]
+no_examine.extend([six_five, six_six, seven_four, seven_six])
+no_interact = [one_four, one_six, one_five, two_four, two_five, three_five, four_five, five_four, four_six, five_five, six_five]
 
 door_interact = False
 bookshelf_interact = False
