@@ -1698,6 +1698,7 @@ def wall_message_check(general_backup):
         
 def repeated_action(x, y, newx, newy, wall_counter):
     global action
+    global game_values_string
     for x in game_values_string:
         exec("global "+x)
     print()
@@ -1727,7 +1728,11 @@ def repeated_action(x, y, newx, newy, wall_counter):
             os.remove("save.txt")
         except Exception:
             game_on = True
-            game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_seven_switch_done]
+            global game_values
+            game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, health, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+            game_values.extend([four_nine_switch_done, five_zero_switch_done])
+            game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "health", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+            game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
             file = open("save.txt", "w")
             for x, y in zip(game_values, game_values_string):
                 txt = str(y+"="+str(x))
