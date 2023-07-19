@@ -6,4 +6,6 @@ If the game closes suddenly a bug has appeared.
 If this does occur, please use the "issues" tab on github to alert this to me.
 If you get stuck, that's most likely you, not the game.
 
+NOTE: STOP YOUR GAME IMMEDIATELY AND REPLAY TO CALIBRATE SAVING (if you want saving)
+
 Have fun!
