@@ -3,7 +3,7 @@ from location import *
 lobby = location(0, 0, "lobby") # no edges
 zero_four = location(0, 4, "zero_four") # no edges
 zero_five = location(0, 5, "zero_five") # no edges
-zero_six = location(0, 6, "zero_six")
+zero_six = location(0, 6, "zero_six") # no edges
 book_room = location(1, 0, "book_room") # north, east, south-east edges
 one_one_corridor = location(1, 1, "one_one_corridor") # south edge
 one_two_corridor = location(1, 2, "one_two_corridor") # north edge
@@ -38,18 +38,22 @@ six_six = location(6, 6, "six_six") # no edges
 seven_four = location(7, 4, "seven_four") # no edges
 seven_five = location(7, 5, "seven_five") # no edges
 seven_six = location(7, 6, "seven_six") # no edges
+eight_four = location(8, 4, "eight_four") # no edges
+eight_five = location(8, 5, "eight_five") # no edges
+eight_six = location(8, 6, "eight_six") # no edges
+nine_four = location(9, 4, "nine_four") # no edges
 
 #book room has edges north, east, and south-east leading to door, bookshelf and hole respectively
 
 locations = [lobby, zero_four, zero_five, zero_six, book_room, one_one_corridor, one_two_corridor, one_three, one_four, one_five, one_six, one_seven, lectern_room, two_four, two_five, two_six, three_four, three_five, three_six]
 locations.extend([four_four, four_five, four_six, four_seven, four_eight, four_nine, five_zero, five_one, five_two, five_three, five_four, five_five, five_six, six_four, six_five, six_six])
-locations.extend([seven_four, seven_five, seven_six])
+locations.extend([seven_four, seven_five, seven_six, eight_four, eight_five, eight_six, nine_four])
 multiple_edges = [book_room, one_three, one_six]
 no_edges = [lobby, zero_four, zero_five, zero_six, one_seven, lectern_room, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, four_nine, five_zero, five_one, five_two, five_three, five_four, five_five, five_six]
-no_edges.extend([six_four, six_five, six_six, seven_four, seven_five, seven_six])
+no_edges.extend([six_four, six_five, six_six, seven_four, seven_five, seven_six, eight_four, eight_five, eight_six, nine_four])
 no_examine = [lobby, two_four, two_five, two_six, three_four, three_five, three_six, four_seven, four_eight, five_one, five_two, five_three, five_four, five_five, five_six, six_four]
-no_examine.extend([six_five, six_six, seven_four, seven_six])
-no_interact = [one_four, one_six, one_five, two_four, two_five, three_five, four_five, five_four, four_six, five_five, six_five]
+no_examine.extend([six_five, six_six, seven_four, seven_six, eight_four, eight_five, eight_six, nine_four])
+no_interact = [one_four, one_six, one_five, two_four, two_five, three_five, four_five, five_four, four_six, five_five, six_five, eight_five]
 
 door_interact = False
 bookshelf_interact = False

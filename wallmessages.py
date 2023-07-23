@@ -160,3 +160,21 @@ def wall_26():
     time.sleep(1)
     print("Might be difficult with the limiting inventory space.")
     time.sleep(1)
+
+def wall_27():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("There are a few secrets hidden in this game.")
+    time.sleep(1)
+
+def wall_28():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Some harder to find than others, like this one.")
+    time.sleep(1)
+
+def wall_29():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Some are a bit easier.")
+    time.sleep(1)
