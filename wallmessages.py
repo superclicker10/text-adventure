@@ -178,3 +178,45 @@ def wall_29():
     time.sleep(1)
     print("Some are a bit easier.")
     time.sleep(1)
+
+def wall_30():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("To touch this many walls you have to be on the (9, y) corridor.")
+    time.sleep(1)
+
+def wall_31():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("If my calculations are correct.")
+    time.sleep(1)
+
+def wall_32():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("There's a lot of stuff in that last corridor.")
+    time.sleep(1)
+
+def wall_33():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("You must almost be done, right?")
+    time.sleep(1)
+
+def wall_34():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Is your madness not satiated?")
+    time.sleep(1)
+
+def wall_35():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("Well, there's only two after this.")
+    time.sleep(1)
+
+def wall_36():
+    print("You touch the wall again.")
+    time.sleep(1)
+    print("The god will meet you after this next wall. Godspeed.")
+    time.sleep(1)

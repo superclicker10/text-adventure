@@ -7,7 +7,7 @@ from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "40", "41", "42", "43", "410", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "73", "77", "83", "87", "94", "95", "96"]
+restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "40", "41", "42", "43", "410", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "73", "77", "710", "83", "87", "88", "89", "92", "911", "103", "104", "106", "107", "108", "109", "1010", "115"]
 book_num = random.randint(1, 100)
 action = None
 n = 1
@@ -19,7 +19,10 @@ y = 0
 newy = 0
 room = "lobby"
 inventory = []
+inv_size = 3
 health = 10
+weapon = "fists"
+atk_power = 1
 ending_condition = False
 one_one_door_interact_state = False
 bookshelf_interact_state = False
@@ -33,11 +36,13 @@ lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
 zero_four_wall_done = zero_five_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = four_seven_wall_done = four_eight_wall_done = four_nine_wall_done = five_one_wall_done = five_two_wall_done = five_three_wall_done = five_six_wall_done = False
 zero_four_wall_backup = zero_five_wall_backup = three_four_wall_backup = three_six_wall_backup = four_four_wall_backup = four_seven_wall_backup = four_eight_backup_state = four_nine_wall_backup = five_one_wall_backup = five_two_wall_backup =  five_three_wall_backup = five_six_wall_backup = 0
-five_zero_wall_done = zero_six_wall_done = six_four_wall_done = six_six_wall_done = seven_four_wall_done = seven_six_wall_done = eight_four_wall_done = eight_six_wall_done = nine_four_wall_done = False
-five_zero_wall_backup = zero_six_wall_backup = six_four_wall_backup = six_six_wall_backup = seven_five_wall_done = seven_six_wall_backup = eight_four_wall_backup = eight_six_wall_backup = nine_four_wall_backup = 0
-game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, health, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+five_zero_wall_done = zero_six_wall_done = six_four_wall_done = six_six_wall_done = seven_four_wall_done = seven_six_wall_done = eight_four_wall_done = eight_six_wall_done = nine_three_wall_done = nine_four_wall_done = nine_six_wall_done = nine_seven_wall_done = False
+five_zero_wall_backup = zero_six_wall_backup = six_four_wall_backup = six_six_wall_backup = seven_five_wall_done = seven_six_wall_backup = eight_four_wall_backup = eight_six_wall_backup = nine_three_wall_backup = nine_four_wall_backup = nine_six_wall_backup = nine_seven_wall_backup = 0
+eight_ten_wall_done = nine_seven_wall_done = nine_eight_wall_done = nine_nine_wall_done = nine_ten_wall_done = False
+eight_ten_wall_backup = nine_seven_wall_backup = nine_eight_wall_backup = nine_nine_wall_backup = nine_ten_wall_backup = 0
+game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
 game_values.extend([four_nine_switch_done, five_zero_switch_done])
-game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "health", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
 game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
 
 def time_check():
@@ -50,12 +55,12 @@ def time_check():
     else:
         if n < 0.5:
             print("Delay set to min value (0.5)")
-            time.sleep(n)
             n = 0.5
+            time.sleep(n)
         elif n > 2:
             print("Delay set to max value (2)")
-            time.sleep(n)
             n = 2
+            time.sleep(n)
         else:
             print("Delay set to "+str(n)+"!")
             time.sleep(n)
@@ -1579,7 +1584,104 @@ def eight_six_interact(obj_interact):
         time.sleep(n)
 
 
+def eight_ten():
+    global room
+    room = "eight_ten"
+    print("A blue light leading to another distant place lies north.")
+    time.sleep(n)
+    print("You still have time to go back.")
+    time.sleep(n)
+    return room
 
+def eight_ten_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global eight_ten_wall_done
+        global eight_ten_wall_backup
+        global general_backup
+        if eight_ten_wall_done == False:
+            eight_ten_wall_backup = general_backup = wall_counter
+            wall_message_check(eight_ten_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(eight_ten_wall_backup)
+        eight_ten_wall_done = True
+        return wall_counter, eight_ten_wall_done
+
+
+    
+
+def eight_eleven():
+    global room
+    global ending_condition
+    room = "eight_eleven"
+    backrooms_entry_ending()
+    ending_condition = True
+    return ending_condition
+    
+def backrooms_entry_ending():
+    global ending_condition
+    global game_on
+    print("You enter through the portal into a strange place filled with yellow walls and a sense of evil.")
+    time.sleep(2)
+    print("(This is the Backrooms DLC to be developed after the game's completion. Come here when the DLC is released.)")
+    time.sleep(2)
+    print("ENDING 2 - INTO THE BACKROOMS")
+    time.sleep(3)
+    ending_condition = True
+
+def nine_three():
+    global room
+    room = "nine_three"
+    print("You are at the southern edge of the eastern corridor.")
+    time.sleep(n)
+    print("There is a backpack on the ground.")
+    time.sleep(n)
+    print("It may be of use to you.")
+    time.sleep(n)
+    return room
+
+def nine_three_interact(obj_interact):
+    if obj_interact == "backpack":
+        global inv_size
+        if inv_size >= 5:
+            print("You already have the backpack.")
+            time.sleep(n)
+        else:
+            print("You pick up the backpack.")
+            time.sleep(n)
+            inv_size = 5
+            print("Inventory size increased to 5!")
+            time.sleep(n)
+    elif obj_interact == "wall":
+        global wall_counter
+        global nine_three_wall_done
+        global nine_three_wall_backup
+        global general_backup
+        if nine_three_wall_done == False:
+            nine_three_wall_backup = general_backup = wall_counter
+            wall_message_check(nine_three_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(nine_three_wall_backup)
+        nine_three_wall_done = True
+        return wall_counter, nine_three_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
+
+def nine_three_examine(obj_examine):
+    if obj_examine == "backpack":
+        print("A backpack on the ground.")
+        time.sleep(n)
+        print("It may increase your inventory size.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+
+        
 def nine_four():
     global room
     room = "nine_four"
@@ -1609,6 +1711,215 @@ def nine_four_interact(obj_interact):
 
 
 
+def nine_five():
+    global room
+    room = "nine_five"
+    print("There is a room to your east.")
+    time.sleep(n)
+    print("And there is a blade on the ground.")
+    time.sleep(n)
+
+def nine_five_interact(obj_interact):
+    if obj_interact == "blade":
+        global weapon
+        global atk_power
+        if weapon != "blade":
+            print("You pick up the blade.")
+            time.sleep(n)
+            weapon = "blade"
+            atk_power = 2
+            print("Your attack power is now 2.")
+            time.sleep(n)
+        else:
+            print("You already have the blade.")
+            time.sleep(n)
+        return weapon
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
+
+def nine_five_examine(obj_examine):
+    if obj_examine == "blade":
+        print("A small blade with a wood handle.")
+        time.sleep(n)
+        print("It could make you appear more dangerous to anything that you come across.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+def nine_five_edge():
+    print("A room to your east contains something alive inside of it.")
+    time.sleep(n)
+    print("It may pose a threat to you if you approach it.")
+    time.sleep(n)
+
+
+
+
+def nine_six():
+    global room
+    room = "nine_six"
+    print("You are at the eastern end of the space.")
+    time.sleep(n)
+    print("There is a strange object north of you.")
+    time.sleep(n)
+    return room
+
+def nine_six_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global nine_six_wall_done
+        global nine_six_wall_backup
+        global general_backup
+        if nine_six_wall_done == False:
+            nine_six_wall_backup = general_backup = wall_counter
+            wall_message_check(nine_six_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(nine_six_wall_backup)
+        nine_six_wall_done = True
+        return wall_counter, nine_six_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
+
+
+
+def nine_seven():
+    global room
+    room = "nine_seven"
+    print("You approach the northern end of the corridor.")
+    time.sleep(n)
+    print("There is a strange screen on the floor.")
+    time.sleep(n)
+    print("Also, the northern wall does not look to be as solid as the others...")
+    time.sleep(n)
+    return room
+
+def nine_seven_interact(obj_interact):
+    if obj_interact == "screen":
+        if "screen" not in inventory:
+            print("You pick up the screen.")
+            time.sleep(n)
+            print("It lights up and displays some numbers on the screen.")
+            time.sleep(n)
+            print("Perhaps using it will give you more information.")
+            time.sleep(n)
+            add_inventory("screen")
+        else:
+            print("You already have the screen.")
+            time.sleep(n)
+    elif obj_interact == "wall":
+        global wall_counter
+        global nine_seven_wall_done
+        global nine_seven_wall_backup
+        global general_backup
+        if nine_seven_wall_done == False:
+            nine_seven_wall_backup = general_backup = wall_counter
+            wall_message_check(nine_seven_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(nine_seven_wall_backup)
+        nine_seven_wall_done = True
+        return wall_counter, nine_seven_wall_done
+
+def nine_seven_examine(obj_examine):
+    if obj_examine == "screen":
+        print("The screen displays a number as a fraction of another.")
+        time.sleep(n)
+        print("It's title is 'WALLS TOUCHED'.")
+        time.sleep(n)
+        print("You realise this might have importance across the whole space.")
+        time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+def screen_use():
+    print()
+    print("You have touched", wall_counter, "out of 37 walls in the game.")
+    time.sleep(n)
+
+
+
+def nine_eight():
+    global room
+    room = "nine_eight"
+    print("You enter through the veil into a mystical place.")
+    time.sleep(n)
+    print("The corridor continues further north.")
+    time.sleep(n)
+    return room
+
+def nine_eight_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global nine_eight_wall_done
+        global nine_eight_wall_backup
+        global general_backup
+        if nine_eight_wall_done == False:
+            nine_eight_wall_backup = general_backup = wall_counter
+            wall_message_check(nine_eight_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(nine_eight_wall_backup)
+        nine_eight_wall_done = True
+        return wall_counter, nine_eight_wall_done
+
+
+
+def nine_nine():
+    global room
+    room = "nine_nine"
+    print("You continue as the shade of your vision gets darker.")
+    time.sleep(n)
+    print("Stars appear around you.")
+    time.sleep(n)
+    print("Something isn't right here. There is another space further north.")
+    time.sleep(n)
+    return room
+
+def nine_nine_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global nine_nine_wall_done
+        global nine_nine_wall_backup
+        global general_backup
+        if nine_nine_wall_done == False:
+            nine_nine_wall_backup = general_backup = wall_counter
+            wall_message_check(nine_nine_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(nine_nine_wall_backup)
+        nine_nine_wall_done = True
+        return wall_counter, nine_nine_wall_done
+
+def nine_ten():
+    global room
+    room = "nine_ten"
+    print("You go further down.")
+    time.sleep(n)
+    print("Your sense of reality feels weak here.")
+    time.sleep(n)
+    print("There is another space to your west, and an odd blue light in the distance.")
+    time.sleep(n)
+    return room
+
+def nine_ten_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global nine_ten_wall_done
+        global nine_ten_wall_backup
+        global general_backup
+        if nine_ten_wall_done == False:
+            nine_ten_wall_backup = general_backup = wall_counter
+            wall_message_check(nine_ten_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(nine_ten_wall_backup)
+        nine_ten_wall_done = True
+        return wall_counter, nine_ten_wall_done
 
 def oob(x, y, newx, newy):
     if newx <= -1 or newy <= -1:
@@ -1735,7 +2046,7 @@ def inventory_general():
             drop_item(item)
 
 def add_inventory(item):
-    if len(inventory) == 3:
+    if len(inventory) == inv_size:
         print("You cannot add this item, as you haven't enough inventory space.")
         time.sleep(1)
         print("Drop an item, or use one first.")
@@ -1783,6 +2094,8 @@ def use_navigation(item, room):
         note_use()
     elif item == "apple":
         apple_use()
+    elif item == "screen":
+        screen_use()
     else:
         print("You can't use that item.")
     
@@ -1803,12 +2116,18 @@ def wall_message_check(general_backup):
 def repeated_action(x, y, newx, newy, wall_counter):
     global action
     global game_values_string
+    global ending_condition
+    global game_on
     for x in game_values_string:
         exec("global "+x)
     print()
     room_check(x, y, newx, newy)
     x = newx
     y = newy
+    if room == "eight_eleven":
+        ending_condition = True
+        game_on = "ended"
+        return ending_condition, game_on
     print("Your co-ordinates are", str(x)+", "+str(y)+".")
     time.sleep(n)
     print("You have", health, "health.")
@@ -1833,15 +2152,19 @@ def repeated_action(x, y, newx, newy, wall_counter):
         except Exception:
             game_on = True
             global game_values
-            game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, health, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+            game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
             game_values.extend([four_nine_switch_done, five_zero_switch_done])
-            game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "health", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+            game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
             game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
             file = open("save.txt", "w")
             for x, y in zip(game_values, game_values_string):
-                txt = str(y+"="+str(x))
-                file.write(txt)
-                file.write("\n")
+                if y == "weapon":
+                    txt = "weapon="+f'"{weapon}"'+"\n"
+                    file.write(txt)
+                else:
+                    txt = str(y+"="+str(x))
+                    file.write(txt)
+                    file.write("\n")
             file.close()
             game_on = "ended"
             return action
@@ -1854,7 +2177,7 @@ def game_load():
     time_check()
     print("Enter 'stop' to exit and save your game. NOTE: CLOSING DIRECTLY DOES NOT SAVE")
     time.sleep(1)
-    print("(Current boundaries for this version are (9, y). Nothing is more east than those points.)")
+    print("(Current boundaries for this version are (10, 5). Everything else non-restricted is accessible.)")
     time.sleep(1)
     game_on = True
     return game_on
