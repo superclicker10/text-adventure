@@ -9,4 +9,6 @@ If you get stuck, that's most likely you, not the game.
 NOTE: STOP YOUR GAME IMMEDIATELY AND REPLAY TO CALIBRATE SAVING (if you want saving)
 ALTERNATIVE FIX: DRAG SAVE FROM DOWNLOADS TO THE FOLDER WITH PYTHON SCRIPTS
 
+Also - have python. You can't launch it otherwise.
+
 Have fun!
