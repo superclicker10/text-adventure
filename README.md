@@ -3,6 +3,8 @@ This is my first big big project doing python (not really that far into learning
 Have fun using it! Assuming I set the permissions correctly.
 ***RUN MAINSCRIPT.PY TO START***
 
+Also - have python. You can't launch it otherwise.
+
 If there are any bugs, please submit to the issues part of the github you got this from.
 
 
