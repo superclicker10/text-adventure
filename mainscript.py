@@ -2,12 +2,13 @@ import time
 import random
 import webbrowser
 import os
+import sys
 from location import *
 from locations import *
 from wallmessages import *
 from books import *
 
-restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "40", "41", "42", "43", "410", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "73", "77", "710", "83", "87", "88", "89", "92", "911", "103", "104", "106", "107", "108", "109", "1010", "115"]
+restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "40", "41", "42", "43", "410", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "73", "77", "710", "83", "87", "88", "89", "92", "911", "103", "104", "106", "107", "108", "109", "1010"]
 book_num = random.randint(1, 100)
 action = None
 n = 1
@@ -18,10 +19,14 @@ newx = 0
 y = 0
 newy = 0
 room = "lobby"
+combat_state = False
 inventory = []
 inv_size = 3
 health = 10
-weapon = "fists"
+statue_health = 10
+statue_state = "alive"
+attack_pattern = False
+weapon = "your fists"
 atk_power = 1
 ending_condition = False
 one_one_door_interact_state = False
@@ -38,11 +43,11 @@ zero_four_wall_done = zero_five_wall_done = three_four_wall_done = three_six_wal
 zero_four_wall_backup = zero_five_wall_backup = three_four_wall_backup = three_six_wall_backup = four_four_wall_backup = four_seven_wall_backup = four_eight_backup_state = four_nine_wall_backup = five_one_wall_backup = five_two_wall_backup =  five_three_wall_backup = five_six_wall_backup = 0
 five_zero_wall_done = zero_six_wall_done = six_four_wall_done = six_six_wall_done = seven_four_wall_done = seven_six_wall_done = eight_four_wall_done = eight_six_wall_done = nine_three_wall_done = nine_four_wall_done = nine_six_wall_done = nine_seven_wall_done = False
 five_zero_wall_backup = zero_six_wall_backup = six_four_wall_backup = six_six_wall_backup = seven_five_wall_done = seven_six_wall_backup = eight_four_wall_backup = eight_six_wall_backup = nine_three_wall_backup = nine_four_wall_backup = nine_six_wall_backup = nine_seven_wall_backup = 0
-eight_ten_wall_done = nine_seven_wall_done = nine_eight_wall_done = nine_nine_wall_done = nine_ten_wall_done = False
-eight_ten_wall_backup = nine_seven_wall_backup = nine_eight_wall_backup = nine_nine_wall_backup = nine_ten_wall_backup = 0
-game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+eight_ten_wall_done = nine_seven_wall_done = nine_eight_wall_done = nine_nine_wall_done = nine_ten_wall_done = ten_five_wall_done = False
+eight_ten_wall_backup = nine_seven_wall_backup = nine_eight_wall_backup = nine_nine_wall_backup = nine_ten_wall_backup = ten_five_wall_backup = 0
+game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
 game_values.extend([four_nine_switch_done, five_zero_switch_done])
-game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
 game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
 
 def time_check():
@@ -1607,6 +1612,9 @@ def eight_ten_interact(obj_interact):
             wall_message_check(eight_ten_wall_backup)
         eight_ten_wall_done = True
         return wall_counter, eight_ten_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
 
 
     
@@ -1726,7 +1734,7 @@ def nine_five_interact(obj_interact):
         if weapon != "blade":
             print("You pick up the blade.")
             time.sleep(n)
-            weapon = "blade"
+            weapon = "a blade"
             atk_power = 2
             print("Your attack power is now 2.")
             time.sleep(n)
@@ -1823,6 +1831,9 @@ def nine_seven_interact(obj_interact):
             wall_message_check(nine_seven_wall_backup)
         nine_seven_wall_done = True
         return wall_counter, nine_seven_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
 
 def nine_seven_examine(obj_examine):
     if obj_examine == "screen":
@@ -1866,6 +1877,9 @@ def nine_eight_interact(obj_interact):
             wall_message_check(nine_eight_wall_backup)
         nine_eight_wall_done = True
         return wall_counter, nine_eight_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
 
 
 
@@ -1894,6 +1908,9 @@ def nine_nine_interact(obj_interact):
             wall_message_check(nine_nine_wall_backup)
         nine_nine_wall_done = True
         return wall_counter, nine_nine_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
 
 def nine_ten():
     global room
@@ -1920,6 +1937,295 @@ def nine_ten_interact(obj_interact):
             wall_message_check(nine_ten_wall_backup)
         nine_ten_wall_done = True
         return wall_counter, nine_ten_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
+
+
+
+def ten_five():
+    global room
+    global combat_state
+    global game_values_string
+    global health
+    if statue_state == "alive" and health > 0:
+        for x in game_values_string:
+            exec("global "+x)
+        room = "ten_five"
+        print("You enter a room with a statue. But it moves in reaction to your presence.")
+        time.sleep(n)
+        print("It doesn't want you here.")
+        time.sleep(n)
+        print("Entering combat... (GAME AUTOSAVE)")
+        time.sleep(2)
+        global game_values
+        global y
+        y = newy = 5
+        x = newx = 9
+        game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+        game_values.extend([four_nine_switch_done, five_zero_switch_done])
+        game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+        game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
+        file = open("save.txt", "w")
+        for x, y in zip(game_values, game_values_string):
+            if y == "weapon":
+                txt = "weapon="+f'"{weapon}"'+"\n"
+                file.write(txt)
+            elif y == "room":
+                file.write("room='nine_five'"+"\n")
+            elif y == "x":
+                x = 9
+                newx = x
+                newy = y
+                y = newy = 5
+                file.write("x="+str(x)+"\n")
+                x = 10
+                newx = 10
+                y = newy = 5
+            elif y == "statue_state":
+                file.write("statue_state="+f'"{statue_state}"'+"\n")
+            else:
+                txt = str(y+"="+str(x))
+                file.write(txt)
+                file.write("\n")
+        file.close()
+        combat_state = True
+        return combat_state, room, health
+    elif health <= 0:
+        death_sequence()
+        combat_state = False
+        return combat_state
+    else:
+        print("You are where the statue's corpse lies.")
+        time.sleep(n)
+        print("To the east of you is an open space.")
+        time.sleep(n)
+        print("Freedom looks to be mere moments away.")
+        time.sleep(n)
+        return room
+
+def ten_five_interact(obj_interact):
+    if obj_interact == "wall":
+        global wall_counter
+        global ten_five_wall_done
+        global ten_five_wall_backup
+        global general_backup
+        if ten_five_wall_done == False:
+            ten_five_wall_backup = general_backup = wall_counter
+            wall_message_check(ten_five_wall_backup)
+            wall_counter = wall_counter + 1
+        else:
+            wall_message_check(ten_five_wall_backup)
+        ten_five_wall_done = True
+        return wall_counter, ten_five_wall_done
+    else:
+        print("You can't interact with that.")
+        time.sleep(n)
+
+def ten_five_examine(obj_examine):
+    if obj_examine == "statue":
+        if statue_state == "alive":
+            print("A big statue made of rock.")
+            time.sleep(n)
+            print("It is threatening but not exactly overpowering.")
+            time.sleep(n)
+        else:
+            print("A big statue made of rock.")
+            time.sleep(n)
+            print("It is now dead on the floor.")
+            time.sleep(n)
+    else:
+        print("You can't examine that.")
+        time.sleep(n)
+
+def ten_five_edge():
+    print("Freedom.")
+    time.sleep(n)
+
+def ten_five_combat():
+    global health
+    global weapon
+    global statue_health
+    global attack_pattern
+    global combat_state
+    global statue_state
+    global game_values_string
+    global action
+    if action == "stop":
+        exit(1)
+    for x in game_values_string:
+        exec("global "+x)
+    if health <= 0:
+        death_sequence()
+        combat_state = False
+        return combat_state
+    elif statue_health <= 0:
+        print("The statue falls as it dies.")
+        time.sleep(n)
+        print("You are victorious!")
+        time.sleep(n)
+        combat_state = False
+        statue_state = "dead"
+        return combat_state, statue_state
+    elif attack_pattern == True:
+        statue_pattern()
+        attack_pattern = False
+    else:
+        print("You have", health, "health.")
+        time.sleep(n)
+        print("You have", weapon, "as your weapon.")
+        time.sleep(n)
+        print("The statue has", statue_health, "health left.")
+        action = input("What to do? (attack, idle, interact, examine, move (edge), use, inventory, stop): ")
+        if action == "attack":
+            eval(room+"_attack()")
+            attack_pattern = True
+        elif action == "idle":
+            print("You wait. It doesn't seem helpful. The statue is confused.")
+            time.sleep(n)
+            attack_pattern = True
+        elif action == "interact":
+            interact(room)
+            attack_pattern = True
+        elif action == "examine":
+            examine(room)
+            attack_pattern = True
+        elif action == "move":
+            y = newy
+            move(x, y, room)
+            attack_pattern = True
+        elif action == "use":
+            use(room)
+        elif action == "inventory":
+            inventory_general()
+        elif action == "stop":
+            try:
+                os.remove("save.txt")
+            finally:
+                game_on = True
+                global game_values
+                y = newy
+                ending_condition = False
+                game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+                game_values.extend([four_nine_switch_done, five_zero_switch_done])
+                game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+                game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
+                file = open("save.txt", "w")
+                for x, y in zip(game_values, game_values_string):
+                    if y == "x":
+                        x = newx
+                        file.write("x="+f'{x}'+"\n")
+                    elif y == "weapon":
+                        txt = "weapon="+f'"{weapon}"'+"\n"
+                        file.write(txt)
+                    else:
+                        txt = str(y+"="+str(x))
+                        file.write(txt)
+                        file.write("\n")
+                file.close()
+                game_on = "ended"
+                ending_condition = True
+                return action, game_on, ending_condition
+                sys.exit()
+        else:
+            print("You can't do that.")
+            time.sleep(n)
+
+def death_sequence():
+    global game_values_string
+    for y in game_values_string:
+        exec("global "+y)
+    print("You died!")
+    time.sleep(n)
+    print("Exiting... (if you want to return load previous save.)")
+    time.sleep(n)
+    file = open("save.txt", "r")
+    for x in file:
+        exec(x)
+    combat_state = False
+    room = "nine_five"
+    sys.exit()
+    return combat_state, game_values
+
+
+def statue_pattern():
+    global health
+    crit_chance = random.randint(1, 20)
+    if crit_chance == 5:
+        health = health - (3*1)
+        print("You were damaged for 3 health! (CRIT)")
+    else:
+        health = health - 1
+        print("You were damaged for 1 health!")
+    time.sleep(n)
+    attack_pattern = False
+    return attack_pattern, health
+        
+def ten_five_attack():
+    global statue_health
+    crit_chance = random.randint(1, 10)
+    if crit_chance == 5:
+        statue_health = statue_health - (3*atk_power)
+        print("Damaged statue for", (3*atk_power), "damage! (CRIT)")
+    else:
+        statue_health = statue_health - atk_power
+        print("Damaged statue for", atk_power, "damage!")
+    time.sleep(n)
+    return statue_health
+
+def eleven_five():
+    global room
+    global ending_condition
+    room = "eleven_five"
+    freedom_ending()
+    ending_condition = True
+    return ending_condition
+
+def freedom_ending():
+    print("You walk out into the open air, and feel the breeze among your face.")
+    time.sleep(3)
+    print("You feel comfort and happiness, as you start to walk toward your life again.")
+    time.sleep(3)
+    print("You are free.")
+    time.sleep(3)
+    print("ENDING 3 - FREEDOM")
+    time.sleep(3)
+    print("(This is the True Ending to the game. Now you can restart to find all the secrets this game has to offer.)")
+    time.sleep(3)
+    sys.exit()
+
+
+
+def wall_god_ending():
+    print("As you touch the very last wall there is...")
+    time.sleep(2)
+    print("A godly energy begins to seep from the walls. It manifests into a ghostly being.")
+    time.sleep(2)
+    print("'Thank you for freeing me...' it says.")
+    time.sleep(2)
+    print("'You read the book, didn't you? And found how to free me...'")
+    time.sleep(2)
+    print("'Even if you haven't, I applaud your effort.'")
+    time.sleep(2)
+    print("'I have been trapped in these walls for many hundreds of years.'")
+    time.sleep(2)
+    print("'Watching time pass in these narrow halls.'")
+    time.sleep(2)
+    print("'I could only watch as you went through this complex. Begging for you to touch the walls.'")
+    time.sleep(2)
+    print("'The walls contain my energy, to be only released upon touch.'")
+    time.sleep(2)
+    print("'But this place was abandoned. So alas, nothing.")
+    time.sleep(2)
+    print("'You should continue your adventure. I will roam these lands until I am called upon once again.'")
+    time.sleep(2)
+    print("'Goodbye, mortal...'")
+    time.sleep(2)
+    print("The deity floats away. You are confused, but know you have saved a trapped being.")
+    time.sleep(2)
+    print("ENDING 4 - FREEING THE WALL GOD")
+    time.sleep(4)
+    sys.exit()
 
 def oob(x, y, newx, newy):
     if newx <= -1 or newy <= -1:
@@ -1929,7 +2235,10 @@ def oob(x, y, newx, newy):
 def move(x, y, room):
     global newx
     global newy
-    move = input("Where are you moving to? (+x, -x, +y, -y, edge): ")
+    if combat_state == True:
+        move = "edge"
+    else:
+        move = input("Where are you moving to? (+x, -x, +y, -y, edge): ")
     if move == "+x":
         x_backup = x
         newx = x + 1
@@ -2112,72 +2421,85 @@ def wall_message_check(general_backup):
             eval("wall_"+str(general_backup)+"()")
         else:
             pass
-        
+
 def repeated_action(x, y, newx, newy, wall_counter):
     global action
     global game_values_string
     global ending_condition
     global game_on
+    global combat_state
+    global statue_state
+    if wall_counter == 37:
+        wall_god_ending()
     for x in game_values_string:
         exec("global "+x)
     print()
-    room_check(x, y, newx, newy)
-    x = newx
-    y = newy
-    if room == "eight_eleven":
-        ending_condition = True
-        game_on = "ended"
-        return ending_condition, game_on
-    print("Your co-ordinates are", str(x)+", "+str(y)+".")
-    time.sleep(n)
-    print("You have", health, "health.")
-    time.sleep(n)
-    action = input("What to do? (interact, move, use, examine, inventory, stop): ")
-    if action == "move":
-        move(x, y, room)
-    elif action == "examine":
-        examine(room)
-    elif action == "interact":
-        interact(room)
-    elif action == "inventory":
-        inventory_general()
-    elif action == "use":
-        use(room)
-    elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
-        webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
-        time.sleep(1)
-    elif action == "stop":
-        try:
-            os.remove("save.txt")
-        except Exception:
-            game_on = True
-            global game_values
-            game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
-            game_values.extend([four_nine_switch_done, five_zero_switch_done])
-            game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
-            game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
-            file = open("save.txt", "w")
-            for x, y in zip(game_values, game_values_string):
-                if y == "weapon":
-                    txt = "weapon="+f'"{weapon}"'+"\n"
-                    file.write(txt)
-                else:
-                    txt = str(y+"="+str(x))
-                    file.write(txt)
-                    file.write("\n")
-            file.close()
-            game_on = "ended"
-            return action
+    if room == "ten_five" and statue_state == "alive" and health > 0:
+        for x in range(0, len(locations)):
+            y = locations[x]
+            if newx == y.xpos and newy == y.ypos:
+                eval(y.name+"_combat()")
+    elif health == 0:
+        death_sequence()
     else:
-        print("You can't do that.")
+        room_check(x, y, newx, newy)
+        x = newx
+        y = newy
+        if combat_state == True:
+            return x, newx, y, newy
+        if room == "eight_eleven":
+            ending_condition = True
+            game_on = "ended"
+            return ending_condition, game_on
+        print("Your co-ordinates are", str(x)+", "+str(y)+".")
         time.sleep(n)
+        print("You have", health, "health.")
+        time.sleep(n)
+        action = input("What to do? (interact, move, use, examine, inventory, stop): ")
+        if action == "move":
+            move(x, y, room)
+        elif action == "examine":
+            examine(room)
+        elif action == "interact":
+            interact(room)
+        elif action == "inventory":
+            inventory_general()
+        elif action == "use":
+            use(room)
+        elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
+            webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
+            time.sleep(1)
+        elif action == "stop":
+            try:
+                os.remove("save.txt")
+            except Exception:
+                game_on = True
+                global game_values
+                game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+                game_values.extend([four_nine_switch_done, five_zero_switch_done])
+                game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+                game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
+                file = open("save.txt", "w")
+                for x, y in zip(game_values, game_values_string):
+                    if y == "weapon":
+                        txt = "weapon="+f'"{weapon}"'+"\n"
+                        file.write(txt)
+                    else:
+                        txt = str(y+"="+str(x))
+                        file.write(txt)
+                        file.write("\n")
+                file.close()
+                game_on = "ended"
+                return action
+                sys.exit()
+        else:
+            print("You can't do that.")
+            time.sleep(n)
     
 def game_load():
     global game_on
     time_check()
     print("Enter 'stop' to exit and save your game. NOTE: CLOSING DIRECTLY DOES NOT SAVE")
-    time.sleep(1)
-    print("(Current boundaries for this version are (10, 5). Everything else non-restricted is accessible.)")
     time.sleep(1)
     game_on = True
     return game_on
@@ -2218,12 +2540,14 @@ while game_on == False:
         break
 
 while game_on == True:
-    if ending_condition == True:
-        game_on = "ended"
+    if ending_condition == True or action == "stop":
+        sys.exit()
+        game_on = False
         break
     elif action == "stop":
+        sys.exit()
         ending_condition = True
-        game_on = "ended"
+        game_on = False
         break
     repeated_action(x, y, newx, newy, wall_counter)
     
