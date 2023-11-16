@@ -3,11 +3,13 @@ import random
 import webbrowser
 import os
 import sys
+import warnings
 from location import *
 from locations import *
 from wallmessages import *
 from books import *
-
+# ADD THE BACKROOMS
+# v1.0bf: fixed loading save bug, fixed combat autosave, fixed repeat blade pickup text
 restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "40", "41", "42", "43", "410", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "73", "77", "710", "83", "87", "88", "89", "92", "911", "103", "104", "106", "107", "108", "109", "1010"]
 book_num = random.randint(1, 100)
 action = None
@@ -50,6 +52,9 @@ game_values.extend([four_nine_switch_done, five_zero_switch_done])
 game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
 game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
 
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    
 def time_check():
     global n
     try:
@@ -1731,7 +1736,7 @@ def nine_five_interact(obj_interact):
     if obj_interact == "blade":
         global weapon
         global atk_power
-        if weapon != "blade":
+        if weapon != "a blade":
             print("You pick up the blade.")
             time.sleep(n)
             weapon = "a blade"
@@ -1948,20 +1953,20 @@ def ten_five():
     global combat_state
     global game_values_string
     global health
+    room = "ten_five"
     if statue_state == "alive" and health > 0:
         for x in game_values_string:
             exec("global "+x)
-        room = "ten_five"
         print("You enter a room with a statue. But it moves in reaction to your presence.")
         time.sleep(n)
         print("It doesn't want you here.")
         time.sleep(n)
-        print("Entering combat... (GAME AUTOSAVE)")
+        print("Entering combat...(GAME AUTOSAVE)")
         time.sleep(2)
         global game_values
+        global newx
+        global newy
         global y
-        y = newy = 5
-        x = newx = 9
         game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
         game_values.extend([four_nine_switch_done, five_zero_switch_done])
         game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
@@ -1971,10 +1976,13 @@ def ten_five():
             if y == "weapon":
                 txt = "weapon="+f'"{weapon}"'+"\n"
                 file.write(txt)
+            elif y == "statue_state":
+                txt = "statue_state="+f'"{statue_state}"'+"\n"
+                file.write(txt)
             elif y == "room":
-                file.write("room='nine_five'"+"\n")
+                file.write("room='ten_five'"+"\n")
             elif y == "x":
-                x = 9
+                x = 10
                 newx = x
                 newy = y
                 y = newy = 5
@@ -2484,6 +2492,9 @@ def repeated_action(x, y, newx, newy, wall_counter):
                     if y == "weapon":
                         txt = "weapon="+f'"{weapon}"'+"\n"
                         file.write(txt)
+                    elif y == "statue_state":
+                        txt = "statue_state="+f'"{statue_state}"'+"\n"
+                        file.write(txt)
                     else:
                         txt = str(y+"="+str(x))
                         file.write(txt)
@@ -2492,10 +2503,99 @@ def repeated_action(x, y, newx, newy, wall_counter):
                 game_on = "ended"
                 return action
                 sys.exit()
+def move(x, y, room):
+    global newx
+    global newy
+    if combat_state == True:
+        move = "edge"
+    else:
+        move = input("Where are you moving to? (+x, -x, +y, -y, edge): ")
+    if move == "+x":
+        x_backup = x
+        newx = x + 1
+        if str(newx)+str(newy) in restricted_pos:
+            print("This position is restricted.")
+            time.sleep(n)
+            newx = x_backup
+        else:
+            newy = y
+            return x, y, newx, newy
+    elif move == "-x":
+        x_backup = x
+        newx = x - 1
+        if newx <= -1:
+            oob(x, y, newx, newy)
+            newx = x_backup
+        elif str(newx)+str(newy) in restricted_pos:
+            print("This position is restricted.")
+            time.sleep(n)
+            newx = x_backup
+        else:
+            newy = y
+            return x, y, newx, newy
+    elif move == "+y":
+        y_backup = y
+        newy = y + 1
+        if str(newx)+str(newy) in restricted_pos:
+            print("This position is restricted.")
+            time.sleep(n)
+            newy = y_backup
+        else:
+            newx = x
+            return x, y, newx, newy
+    elif move == "-y":
+        y_backup = y
+        newy = y - 1
+        if newy <= -1:
+            oob(x, y, newx, newy)
+            newy = y_backup
+        elif str(newx)+str(newy) in restricted_pos:
+            print("This position is restricted.")
+            time.sleep(n)
+            newy = y_backup
+        else:
+            newx = x
+            return x, y, newx, newy
+    elif move == "edge":
+        global edge_done
+
+        for x in no_edges:
+            edge_done = False
+            if room == x.name:
+                print("There are no edges to move to in this room.")
+                time.sleep(n)
+                edge_done = True
+                break
+        if edge_done == False:
+            for x in range(0, len(locations)):
+                y = locations[x]
+                if newx == y.xpos and newy == y.ypos:
+                    for x in multiple_edges:
+                        if room == x.name:                            
+                            eval(y.name+"_edges()")
+                            break
+                    else:
+                        try:
+                            eval(y.name+"_edge()")
+                        except NameError:
+                            print("There are no edges to move to in this room.")
+                            time.sleep(n)
         else:
             print("You can't do that.")
             time.sleep(n)
-    
+"""
+def title_load():
+    try:
+        print ("  _______        _                  _                 _                       __   ___   ")
+        print (" |__   __|      | |        /\      | |               | |                     /_ | / _ \  ")
+        print ("    | | _____  _| |_      /  \   __| |_   _____ _ __ | |_ _   _ _ __ ___      | || | | | ")
+        print ("    | |/ _ \ \/ / __|    / /\ \ / _` \ \ / / _ \ '_ \| __| | | | '__/ _ \     | || | | | ")
+        print ("    | |  __/>  <| |_    / ____ \ (_| |\ V /  __/ | | | |_| |_| | | |  __/     | || |_| | ")
+        print ("    |_|\___/_/\_\\___|  /_/    \_\__,_| \_/ \___|_| |_|\__|\__,_|_|  \___|     |_(_)___/  ")
+        print ("                                                                                         ")
+    except SyntaxWarning:
+        pass
+"""   
 def game_load():
     global game_on
     time_check()
@@ -2505,8 +2605,11 @@ def game_load():
     return game_on
     
 while game_on == False:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
     start = input("Turn game on? (yes/no): ")
     if start == "yes":
+        title_load()
         load = input("Start new or load file? (new, load): ")
         if load == "new":
             try:
