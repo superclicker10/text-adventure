@@ -7,19 +7,20 @@ from location import *
 from locations import *
 from wallmessages import *
 from books import *
-# ADD THE BACKROOMS
 restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "40", "41", "42", "43", "410", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "73", "77", "710", "83", "87", "88", "89", "92", "911", "103", "104", "106", "107", "108", "109", "1010"]
 book_num = random.randint(1, 100)
 action = None
 n = 1
 count = 0
 game_on = False
-x = 0
-newx = 0
-bx = 0
-y = 0
-newy = 0
+x = 8
+newx = 8
+bx = 24
+newbx = 24
+y = 10
+newy = 10
 by = 0
+newby = 0
 room = "lobby"
 combat_state = False
 inventory = []
@@ -40,6 +41,13 @@ one_seven_switch_done = False
 four_nine_switch_done = False
 five_zero_switch_done = False
 backrooms_state = False
+poison_active = False
+poison_timer = 0
+back_gridsize = random.randint(25, 50)
+b_man_posx = b_man_posy = 0
+b_exit_posx = b_exit_posy = 0
+b_noclip_posx = b_noclip_posy = 0
+b_fall_posx = b_fall_posy = 0
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done = False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
 zero_four_wall_done = zero_five_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = four_seven_wall_done = four_eight_wall_done = four_nine_wall_done = five_one_wall_done = five_two_wall_done = five_three_wall_done = five_six_wall_done = False
@@ -48,11 +56,11 @@ five_zero_wall_done = zero_six_wall_done = six_four_wall_done = six_six_wall_don
 five_zero_wall_backup = zero_six_wall_backup = six_four_wall_backup = six_six_wall_backup = seven_five_wall_done = seven_six_wall_backup = eight_four_wall_backup = eight_six_wall_backup = nine_three_wall_backup = nine_four_wall_backup = nine_six_wall_backup = nine_seven_wall_backup = 0
 eight_ten_wall_done = nine_seven_wall_done = nine_eight_wall_done = nine_nine_wall_done = nine_ten_wall_done = ten_five_wall_done = False
 eight_ten_wall_backup = nine_seven_wall_backup = nine_eight_wall_backup = nine_nine_wall_backup = nine_ten_wall_backup = ten_five_wall_backup = 0
-game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, y, newy, by, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
-game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state])
-game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "y", "newy", "by", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
-game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state"])
-    
+game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, newby, y, newy, by, newby, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state, poison_timer, back_gridsize, b_man_posx, b_man_posy, b_exit_posx, b_exit_posy, b_noclip_posx, b_noclip_posy, b_fall_posx, b_fall_posy])
+game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "newbx", "y", "newy", "by", "newby", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state", "poison_timer", "back_gridsize", "b_man_posx", "b_man_posy", "b_exit_posx", "b_exit_posy", "b_noclip_posx", "b_noclip_posy", "b_fall_posx", "b_fall_posy"])
+
 def time_check():
     global n
     try:
@@ -1629,6 +1637,8 @@ def eight_eleven():
     
 def backrooms_entry():
     global backrooms_state
+    global backrooms_man_posx
+    global backrooms_man_posy
     print("You enter through the portal into a strange place filled with yellow walls and a sense of evil.")
     time.sleep(2)
     print()
@@ -1643,8 +1653,13 @@ def backrooms_entry():
     print ("          ░  ░  ░   ░  ░             ░            ░  ░░ ░      ░  ░      ░         ░ ░      ░ ░         ░         ░  ")
     print ("                                          ░           ░                                                              ")
     time.sleep(n)
+    b_man_gen(back_gridsize)
+    b_exit_gen(back_gridsize)
+    b_noclip_gen(back_gridsize)
+    b_fall_gen(back_gridsize)
     backrooms_state = True
-    #return backrooms_state
+    print(backrooms_state)
+    return backrooms_state
 
 def nine_three():
     global room
@@ -2155,15 +2170,20 @@ def death_sequence():
     global game_values_string
     for y in game_values_string:
         exec("global "+y)
+    global room
     print("You died!")
     time.sleep(n)
     print("Exiting... (if you want to return load previous save.)")
     time.sleep(n)
-    file = open("save.txt", "r")
-    for x in file:
-        exec(x)
+    try:
+        file = open("save.txt", "r")
+        for x in file:
+            exec(x)
+    except Exception:
+        pass
     combat_state = False
-    room = "nine_five"
+    if room == "ten_five":
+        room = "nine_five"
     sys.exit()
     return combat_state, game_values
 
@@ -2247,9 +2267,12 @@ def wall_god_ending():
     time.sleep(4)
     sys.exit()
 
-def oob(x, y, newx, newy):
-    if newx <= -1 or newy <= -1:
+def oob(x, y, newx, newy, newbx, newby):
+    if newx <= -1 or newy <= -1 or newbx <= -1 or newby <= -1:
         print("All negative co-ordinates are out of bounds.")
+        time.sleep(n)
+    elif newbx >= back_gridsize or newby >= back_gridsize:
+        print("You can't go any further.")
         time.sleep(n)
 
 def move(x, y, room):
@@ -2273,7 +2296,7 @@ def move(x, y, room):
         x_backup = x
         newx = x - 1
         if newx <= -1:
-            oob(x, y, newx, newy)
+            oob(x, y, newx, newy, newbx, newby)
             newx = x_backup
         elif str(newx)+str(newy) in restricted_pos:
             print("This position is restricted.")
@@ -2296,7 +2319,7 @@ def move(x, y, room):
         y_backup = y
         newy = y - 1
         if newy <= -1:
-            oob(x, y, newx, newy)
+            oob(x, y, newx, newy, newbx, newby)
             newy = y_backup
         elif str(newx)+str(newy) in restricted_pos:
             print("This position is restricted.")
@@ -2441,86 +2464,222 @@ def wall_message_check(general_backup):
             eval("wall_"+str(general_backup)+"()")
         else:
             pass
+        
+###################################################################### BACKROOMS CONTENT
+######################################################################
+# do make sure to handle whether things can generate on the same space 
+def b_man_gen(back_gridsize):
+    global b_man_posx
+    global b_man_posy
+    b_man_posx = random.randint(0, back_gridsize)
+    b_man_posy = random.randint(0, back_gridsize)
+    return b_man_posx, b_man_posy
+
+def b_exit_gen(back_gridsize):
+    global b_exit_posx
+    global b_exit_posy
+    b_exit_posx = random.randint(0, back_gridsize)
+    b_exit_posy = random.randint(0, back_gridsize)
+    return b_exit_posx, b_exit_posy
+
+def b_noclip_gen(back_gridsize):
+    global b_noclip_posx
+    global b_noclip_posy
+    b_noclip_posx = random.randint(0, back_gridsize)
+    b_noclip_posy = random.randint(0, back_gridsize)
+    return b_noclip_posx, b_noclip_posy
+
+def b_fall_gen(back_gridsize):
+    global b_fall_posx
+    global b_fall_posy
+    b_fall_posx = random.randint(0, back_gridsize)
+    b_fall_posy = random.randint(0, back_gridsize)
+    return b_fall_posx, b_fall_posy
+
+def b_man_check(newbx, newby, b_man_posx, b_man_posy):
+    global poison_timer
+    if str(newbx)+str(newby) == str(b_man_posx)+str(b_man_posy):
+        print("You ran into the entity!")
+        time.sleep(n)
+        print("He hits you and runs away...")
+        time.sleep(n)
+        poison_timer = 3
+        b_man_gen(back_gridsize)
+        return poison_timer
+
+def b_exit_check(newbx, newby, b_exit_posx, b_exit_posy):
+    if str(newbx)+str(newby) == str(b_exit_posx)+str(b_exit_posy):
+        print("There is an exit.")
+        time.sleep(n)
+        print("You jump through.")
+        time.sleep(n)
+        print("You emerge from a pipe into a river.")
+        time.sleep(2)
+        print("In an open world, away from the torture of the humming lights and the yellow wallpaper.")
+        time.sleep(2)
+        print("You embrace the breeze.")
+        time.sleep(2)
+        print("Freedom at last. But somehow it feels like that closed area had a proper way out.")
+        time.sleep(2)
+        print("One that didn't involve The Backrooms.")
+        time.sleep(2)
+        print("ENDING 2 - ESCAPED THE BACKROOMS")
+        time.sleep(4)
+        sys.exit()
+
+def b_noclip_check(newbx, newby, b_noclip_posx, b_noclip_posy):
+    global backrooms_state
+    global room
+    global newy
+    if str(newbx)+str(newby) == str(b_noclip_posx)+str(b_noclip_posy):
+        global backrooms_state
+        global room
+        global newy
+        print("You fall through reality...")
+        time.sleep(n)
+        print("Only to end up back where you were before you entered Hell.")
+        time.sleep(n)
+        b_noclip_gen(back_gridsize)
+        backrooms_state = False
+        room = "eight_ten"
+        newy = y = 10
+        return backrooms_state, room, newy, y
+
+def b_fall_check(newbx, newby, b_fall_posx, b_fall_posy):
+    if str(newbx)+str(newby) == str(b_fall_posx)+str(b_fall_posy):
+        print("You fall through reality...")
+        time.sleep(n)
+        print("The void is everlasting and eternal.")
+        time.sleep(n)
+        death_sequence()
+
+def poison_check():
+    global poison_timer
+    global health
+    if poison_timer > 0:
+        print("The poison from the hit damages you...")
+        time.sleep(n)
+        print("You lost 1 health!")
+        health = health - 1
+        poison_timer = poison_timer - 1
+    else:
+        pass
+    
+    
 
 def backrooms_move(back_gridsize):
     global bx
     global by
-    move = input("Where are you moving to? (+x, -x, +y, -y, edge): ")
-    if move == "+x":
-        x_backup = x
-        newx = x + 1
-        if str(newx)+str(newy) in restricted_pos:
-            print("This position is restricted.")
-            time.sleep(n)
-            newx = x_backup
+    global newbx
+    global newby
+    directions = ["+x", "+y", "-x", "-y"]
+    b_direction = random.choices(directions, k=1)
+    b_direction = "".join(b_direction)
+    move = input("Where are you moving to? (+x, -x, +y, -y): ")
+    if move == b_direction:
+        print("An ethereal force prevents you from going that way.")
+        time.sleep(n)
+    elif move == "+x":
+        bx_backup = bx
+        newbx = bx + 1
+        if newbx >= back_gridsize:
+            oob(bx, by, newbx, newby, newbx, newby)
+            newbx = bx_backup
         else:
-            newy = y
-            return x, y, newx, newy
+            newby = by
+            bx = bx + 1
+            return bx, by, newbx, newby
     elif move == "-x":
-        x_backup = x
-        newx = x - 1
-        if newx <= -1:
-            oob(x, y, newx, newy)
-            newx = x_backup
-        elif str(newx)+str(newy) in restricted_pos:
-            print("This position is restricted.")
-            time.sleep(n)
-            newx = x_backup
+        bx_backup = bx
+        newbx = bx - 1
+        if newbx >= back_gridsize:
+            oob(bx, by, newbx, newby, newbx, newby)
+            newbx = bx_backup
         else:
-            newy = y
-            return x, y, newx, newy
+            newby = by
+            bx = bx - 1
+            return bx, by, newbx, newby
     elif move == "+y":
-        y_backup = y
-        newy = y + 1
-        if str(newx)+str(newy) in restricted_pos:
-            print("This position is restricted.")
-            time.sleep(n)
-            newy = y_backup
+        by_backup = by
+        newby = by + 1
+        if newby >= back_gridsize:
+            oob(bx, by, newbx, newby, newbx, newby)
+            newby = by_backup
         else:
-            newx = x
-            return x, y, newx, newy
+            newbx = bx
+            by = by + 1
+            return bx, by, newbx, newby
     elif move == "-y":
-        y_backup = y
-        newy = y - 1
-        if newy <= -1:
-            oob(x, y, newx, newy)
-            newy = y_backup
-        elif str(newx)+str(newy) in restricted_pos:
-            print("This position is restricted.")
-            time.sleep(n)
-            newy = y_backup
+        by_backup = by
+        newby = by - 1
+        if newby >= back_gridsize:
+            oob(bx, by, newbx, newby, newbx, newby)
+            newby = by_backup
         else:
-            newx = x
-            return x, y, newx, newy
+            newbx = bx
+            by = by - 1
+            return bx, by, newbx, newby
 
 def backrooms_repeated_action(bx, by):
+    global action
+    global game_values_string
+    global ending_condition
+    global game_on
+    global combat_state
+    global statue_state
+    global backrooms_state
+    global newbx
+    global newby
     print()
-    print("You're in the backrooms.")
-    time.sleep(n)
-    print("Your coordinates are", str(bx)+", "+str(by)+".")
-    time.sleep(n)
-    action = input("What to do? (interact, move, use, examine, inventory, stop): ")
-    if action == "move":
-        backrooms_move(back_gridsize)
-    elif action == "examine":
-        examine(room)
-    elif action == "interact":
-        interact(room)
-    elif action == "inventory":
-        inventory_general()
-    elif action == "use":
-        use(room)
-    elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
-        webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
-        time.sleep(1)
-    elif action == "stop":
-        save()
-        game_on = "ended"
-        sys.exit()
-        return action
+    b_man_check(newbx, newby, b_man_posx, b_man_posy)
+    b_exit_check(newbx, newby, b_exit_posx, b_exit_posy)
+    b_noclip_check(newbx, newby, b_noclip_posx, b_noclip_posy)
+    b_fall_check(newbx, newby, b_fall_posx, b_fall_posy)
+    poison_check()
+    if health == 0:
+        death_sequence()
+    print(b_man_posx, b_man_posy)
+    print(b_exit_posx, b_exit_posy)
+    print(b_noclip_posx, b_noclip_posy)
+    print(b_fall_posx, b_fall_posy)
+    if backrooms_state == False:
+        repeated_action(x, y, newx, newy, wall_counter)
     else:
-        print("You can't do that.")
+        print("You're in the backrooms.")
         time.sleep(n)
+        print("Your coordinates are", str(newbx)+", "+str(newby)+".")
+        time.sleep(n)
+        print("You have", health, "health.")
+        time.sleep(n)
+        action = input("What to do? (interact, move, use, examine, inventory, stop): ")
+        if action == "tp":
+            newbx = bx = int(input("x: "))
+            newby = by = int(input("y: "))
+        if action == "move":
+            print(poison_active)
+            backrooms_move(back_gridsize)
+        elif action == "examine":
+            examine(room)
+        elif action == "interact":
+            interact(room)
+        elif action == "inventory":
+            inventory_general()
+        elif action == "use":
+            use(room)
+        elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
+            webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
+            time.sleep(1)
+        elif action == "stop":
+            save()
+            game_on = "ended"
+            sys.exit()
+            return action
+        else:
+            print("You can't do that.")
+            time.sleep(n)
+
+######################################################################
+######################################################################
     
 
 def repeated_action(x, y, newx, newy, wall_counter):
@@ -2530,7 +2689,7 @@ def repeated_action(x, y, newx, newy, wall_counter):
     global game_on
     global combat_state
     global statue_state
-    global backrooms_state
+    #global backrooms_state
     global bx
     global by
     if wall_counter >= 37:
@@ -2545,72 +2704,48 @@ def repeated_action(x, y, newx, newy, wall_counter):
                 eval(y.name+"_combat()")
     elif health == 0:
         death_sequence()
-    elif room == "eight_eleven":
-        backrooms_state = True
-        backrooms_repeated_action(bx, by)
-        return backrooms_state
+    #elif room == "eight_eleven":
+        #backrooms_state = True
+        #backrooms_repeated_action(bx, by)
+        #return backrooms_state
     else:
         room_check(x, y, newx, newy)
         x = newx
         y = newy
         if combat_state == True:
             return x, newx, y, newy
-        if room == "eight_eleven":
-            backrooms_repeated_action(bx, by)
+        #if room == "eight_eleven":
+            #backrooms_repeated_action(bx, by)
         else:
-            print("Your co-ordinates are", str(x)+", "+str(y)+".")
-            time.sleep(n)
-            print("You have", health, "health.")
-            time.sleep(n)
-            action = input("What to do? (interact, move, use, examine, inventory, stop): ")
-            if action == "move":
-                move(x, y, room)
-            elif action == "examine":
-                examine(room)
-            elif action == "interact":
-                interact(room)
-            elif action == "inventory":
-                inventory_general()
-            elif action == "use":
-                use(room)
-            elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
-                webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
-                time.sleep(1)
-            elif action == "stop":
-                save()
-                """
-                try:
-                    os.remove("save.txt")
-                except Exception:
-                    game_on = True
-                    global game_values
-                    game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
-                    game_values.extend([four_nine_switch_done, five_zero_switch_done])
-                    game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
-                    game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
-                    file = open("save.txt", "w")
-                    for x, y in zip(game_values, game_values_string):
-                        if y == "weapon":
-                            txt = "weapon="+f'"{weapon}"'+"\n"
-                            file.write(txt)
-                        elif y == "statue_state":
-                            txt = "statue_state="+f'"{statue_state}"'+"\n"
-                            file.write(txt)
-                        else:
-                            txt = str(y+"="+str(x))
-                            file.write(txt)
-                            file.write("\n")
-                    file.close()
+            if backrooms_state == True:
+                backrooms_repeated_action(bx, by)
+            else:
+                print("Your co-ordinates are", str(x)+", "+str(y)+".")
+                time.sleep(n)
+                print("You have", health, "health.")
+                time.sleep(n)
+                action = input("What to do? (interact, move, use, examine, inventory, stop): ")
+                if action == "move":
+                    move(x, y, room)
+                elif action == "examine":
+                    examine(room)
+                elif action == "interact":
+                    interact(room)
+                elif action == "inventory":
+                    inventory_general()
+                elif action == "use":
+                    use(room)
+                elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
+                    webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
+                    time.sleep(1)
+                elif action == "stop":
+                    save()
                     game_on = "ended"
                     return action
                     sys.exit()
-                """
-                game_on = "ended"
-                return action
-                sys.exit()
-            else:
-                print("You can't do that.")
-                time.sleep(n)
+                else:
+                    print("You can't do that.")
+                    time.sleep(n)
 
 def save():
     try:
@@ -2625,10 +2760,10 @@ def save():
         global y
         global newx
         global newy
-        game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, y, newy, by, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
-        game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state])
-        game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "y", "newy", "by", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
-        game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state"])
+        game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, newbx, y, newy, by, newby, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+        game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state, back_gridsize, b_man_posx, b_man_posy, b_exit_posx, b_exit_posy, b_noclip_posx, b_noclip_posy, b_fall_posx, b_fall_posy])
+        game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "newbx", "y", "newy", "by", "newby", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+        game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state", "back_gridsize", "b_man_posx", "b_man_posy", "b_exit_posx", "b_exit_posy", "b_noclip_posx", "b_noclip_posy", "b_fall_posx", "b_fall_posy"])
         file = open("save.txt", "w")
         for x, y in zip(game_values, game_values_string):
             if y == "weapon":
@@ -2644,12 +2779,12 @@ def save():
         file.close()
 
 def title_load():
-    print ("     _______        _                  _                 _                       __  __  ")
-    print ("    |__   __|      | |        /.      | |               | |                     /_ |/_ | ")
-    print ("       | | _____  _| |_      /  .   __| |_   _____ _ __ | |_ _   _ _ __ ___      | | | | ")
-    print ("       | |/ _ . ./ / __|    / /. . / _` . . / / _ . '_ .| __| | | | '__/ _ .     | | | | ")
-    print ("       | |  __/>  <| |_    / ____ . (_| |. V /  __/ | | | |_| |_| | | |  __/     | |_| | ")
-    print ("       |_|.___/_/._..__|  /_/    ._.__,_| ._/ .___|_| |_|.__|.__,_|_|  .___|     |_(_)_| ")
+    print ("  _______        _                  _                 _                           __    __  ")
+    print (" |__   __|      | |        /.      | |               | |                         /_ |  /_ | ")
+    print ("    | | _____  _| |_      /  .   __| |_   _____ _ __ | |_ _   _ _ __ ___    _   __| |   | | ")
+    print ("    | |/ _ . ./ / __|    / /. . / _` . . / / _ . '_ .| __| | | | '__/ _ .  . . / /| |   | | ")
+    print ("    | |  __/>  <| |_    / ____ . (_| |. V /  __/ | | | |_| |_| | | |  __/   . V / | | _ | | ")
+    print ("    |_|.___/_/._..__|  /_/    ._.__,_| ._/ .___|_| |_|.__|.__,_|_|  .___|    ._/  |_|(_)|_| ")
     print()
   
 def game_load():
@@ -2706,8 +2841,8 @@ while game_on == True:
         ending_condition = True
         game_on = False
         break
-    if backrooms_state == False:
-        repeated_action(x, y, newx, newy, wall_counter)
-    elif backrooms_state == True:
+    if backrooms_state == True:
         backrooms_repeated_action(bx, by)
+    elif backrooms_state == False:
+        repeated_action(x, y, newx, newy, wall_counter)
     
