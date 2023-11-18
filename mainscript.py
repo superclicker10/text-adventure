@@ -3,13 +3,11 @@ import random
 import webbrowser
 import os
 import sys
-import warnings
 from location import *
 from locations import *
 from wallmessages import *
 from books import *
 # ADD THE BACKROOMS
-# v1.0bf: fixed loading save bug, fixed combat autosave, fixed repeat blade pickup text
 restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "40", "41", "42", "43", "410", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "73", "77", "710", "83", "87", "88", "89", "92", "911", "103", "104", "106", "107", "108", "109", "1010"]
 book_num = random.randint(1, 100)
 action = None
@@ -18,8 +16,10 @@ count = 0
 game_on = False
 x = 0
 newx = 0
+bx = 0
 y = 0
 newy = 0
+by = 0
 room = "lobby"
 combat_state = False
 inventory = []
@@ -39,6 +39,7 @@ one_two_door_interact = False
 one_seven_switch_done = False
 four_nine_switch_done = False
 five_zero_switch_done = False
+backrooms_state = False
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done = False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
 zero_four_wall_done = zero_five_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = four_seven_wall_done = four_eight_wall_done = four_nine_wall_done = five_one_wall_done = five_two_wall_done = five_three_wall_done = five_six_wall_done = False
@@ -47,13 +48,10 @@ five_zero_wall_done = zero_six_wall_done = six_four_wall_done = six_six_wall_don
 five_zero_wall_backup = zero_six_wall_backup = six_four_wall_backup = six_six_wall_backup = seven_five_wall_done = seven_six_wall_backup = eight_four_wall_backup = eight_six_wall_backup = nine_three_wall_backup = nine_four_wall_backup = nine_six_wall_backup = nine_seven_wall_backup = 0
 eight_ten_wall_done = nine_seven_wall_done = nine_eight_wall_done = nine_nine_wall_done = nine_ten_wall_done = ten_five_wall_done = False
 eight_ten_wall_backup = nine_seven_wall_backup = nine_eight_wall_backup = nine_nine_wall_backup = nine_ten_wall_backup = ten_five_wall_backup = 0
-game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
-game_values.extend([four_nine_switch_done, five_zero_switch_done])
-game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
-game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
-
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
+game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, y, newy, by, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state])
+game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "y", "newy", "by", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state"])
     
 def time_check():
     global n
@@ -1619,29 +1617,34 @@ def eight_ten_interact(obj_interact):
         return wall_counter, eight_ten_wall_done
     else:
         print("You can't interact with that.")
-        time.sleep(n)
-
-
-    
+        time.sleep(n)    
 
 def eight_eleven():
     global room
-    global ending_condition
+    global backrooms_state
     room = "eight_eleven"
-    backrooms_entry_ending()
-    ending_condition = True
-    return ending_condition
+    backrooms_entry()
+    backrooms_state = True
+    #return backrooms_state
     
-def backrooms_entry_ending():
-    global ending_condition
-    global game_on
+def backrooms_entry():
+    global backrooms_state
     print("You enter through the portal into a strange place filled with yellow walls and a sense of evil.")
     time.sleep(2)
-    print("(This is the Backrooms DLC to be developed after the game's completion. Come here when the DLC is released.)")
-    time.sleep(2)
-    print("ENDING 2 - INTO THE BACKROOMS")
-    time.sleep(3)
-    ending_condition = True
+    print()
+    print ("▄▄▄█████▓ ██░ ██ ▓█████              ▄▄▄▄    ▄▄▄       ▄████▄   ██ ▄█▀ ██▀███   ▒█████   ▒█████   ███▄ ▄███▓  ██████ ")
+    print ("▓  ██▒ ▓▒▓██░ ██▒▓█   ▀             ▓█████▄ ▒████▄    ▒██▀ ▀█   ██▄█▒ ▓██ ▒ ██▒▒██▒  ██▒▒██▒  ██▒▓██▒▀█▀ ██▒▒██    ▒ ")
+    print ("▒ ▓██░ ▒░▒██▀▀██░▒███               ▒██▒ ▄██▒██  ▀█▄  ▒▓█    ▄ ▓███▄░ ▓██ ░▄█ ▒▒██░  ██▒▒██░  ██▒▓██    ▓██░░ ▓██▄   ")
+    print ("░ ▓██▓ ░ ░▓█ ░██ ▒▓█  ▄             ▒██░█▀  ░██▄▄▄▄██ ▒▓▓▄ ▄██▒▓██ █▄ ▒██▀▀█▄  ▒██   ██░▒██   ██░▒██    ▒██   ▒   ██▒")
+    print ("  ▒██▒ ░ ░▓█▒░██▓░▒████▒            ░▓█  ▀█▓ ▓█   ▓██▒▒ ▓███▀ ░▒██▒ █▄░██▓ ▒██▒░ ████▓▒░░ ████▓▒░▒██▒   ░██▒▒██████▒▒")
+    print ("  ▒ ░░    ▒ ░░▒░▒░░ ▒░ ░            ░▒▓███▀▒ ▒▒   ▓▒█░░ ░▒ ▒  ░▒ ▒▒ ▓▒░ ▒▓ ░▒▓░░ ▒░▒░▒░ ░ ▒░▒░▒░ ░ ▒░   ░  ░▒ ▒▓▒ ▒ ░")
+    print ("    ░     ▒ ░▒░ ░ ░ ░  ░            ▒░▒   ░   ▒   ▒▒ ░  ░  ▒   ░ ░▒ ▒░  ░▒ ░ ▒░  ░ ▒ ▒░   ░ ▒ ▒░ ░  ░      ░░ ░▒  ░ ░")
+    print ("  ░       ░  ░░ ░   ░                ░    ░   ░   ▒   ░        ░ ░░ ░   ░░   ░ ░ ░ ░ ▒  ░ ░ ░ ▒  ░      ░   ░  ░  ░  ")
+    print ("          ░  ░  ░   ░  ░             ░            ░  ░░ ░      ░  ░      ░         ░ ░      ░ ░         ░         ░  ")
+    print ("                                          ░           ░                                                              ")
+    time.sleep(n)
+    backrooms_state = True
+    #return backrooms_state
 
 def nine_three():
     global room
@@ -1963,6 +1966,8 @@ def ten_five():
         time.sleep(n)
         print("Entering combat...(GAME AUTOSAVE)")
         time.sleep(2)
+        save()
+        """
         global game_values
         global newx
         global newy
@@ -1997,6 +2002,7 @@ def ten_five():
                 file.write(txt)
                 file.write("\n")
         file.close()
+        """
         combat_state = True
         return combat_state, room, health
     elif health <= 0:
@@ -2107,9 +2113,11 @@ def ten_five_combat():
         elif action == "inventory":
             inventory_general()
         elif action == "stop":
+            save()
+            """
             try:
                 os.remove("save.txt")
-            finally:
+            except Exception:
                 game_on = True
                 global game_values
                 y = newy
@@ -2135,6 +2143,10 @@ def ten_five_combat():
                 ending_condition = True
                 return action, game_on, ending_condition
                 sys.exit()
+            """
+            game_on = "ended"
+            return action
+            sys.exit()
         else:
             print("You can't do that.")
             time.sleep(n)
@@ -2430,86 +2442,10 @@ def wall_message_check(general_backup):
         else:
             pass
 
-def repeated_action(x, y, newx, newy, wall_counter):
-    global action
-    global game_values_string
-    global ending_condition
-    global game_on
-    global combat_state
-    global statue_state
-    if wall_counter == 37:
-        wall_god_ending()
-    for x in game_values_string:
-        exec("global "+x)
-    print()
-    if room == "ten_five" and statue_state == "alive" and health > 0:
-        for x in range(0, len(locations)):
-            y = locations[x]
-            if newx == y.xpos and newy == y.ypos:
-                eval(y.name+"_combat()")
-    elif health == 0:
-        death_sequence()
-    else:
-        room_check(x, y, newx, newy)
-        x = newx
-        y = newy
-        if combat_state == True:
-            return x, newx, y, newy
-        if room == "eight_eleven":
-            ending_condition = True
-            game_on = "ended"
-            return ending_condition, game_on
-        print("Your co-ordinates are", str(x)+", "+str(y)+".")
-        time.sleep(n)
-        print("You have", health, "health.")
-        time.sleep(n)
-        action = input("What to do? (interact, move, use, examine, inventory, stop): ")
-        if action == "move":
-            move(x, y, room)
-        elif action == "examine":
-            examine(room)
-        elif action == "interact":
-            interact(room)
-        elif action == "inventory":
-            inventory_general()
-        elif action == "use":
-            use(room)
-        elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
-            webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
-            time.sleep(1)
-        elif action == "stop":
-            try:
-                os.remove("save.txt")
-            except Exception:
-                game_on = True
-                global game_values
-                game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
-                game_values.extend([four_nine_switch_done, five_zero_switch_done])
-                game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
-                game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
-                file = open("save.txt", "w")
-                for x, y in zip(game_values, game_values_string):
-                    if y == "weapon":
-                        txt = "weapon="+f'"{weapon}"'+"\n"
-                        file.write(txt)
-                    elif y == "statue_state":
-                        txt = "statue_state="+f'"{statue_state}"'+"\n"
-                        file.write(txt)
-                    else:
-                        txt = str(y+"="+str(x))
-                        file.write(txt)
-                        file.write("\n")
-                file.close()
-                game_on = "ended"
-                return action
-                sys.exit()
-def move(x, y, room):
-    global newx
-    global newy
-    if combat_state == True:
-        move = "edge"
-    else:
-        move = input("Where are you moving to? (+x, -x, +y, -y, edge): ")
+def backrooms_move(back_gridsize):
+    global bx
+    global by
+    move = input("Where are you moving to? (+x, -x, +y, -y, edge): ")
     if move == "+x":
         x_backup = x
         newx = x + 1
@@ -2556,46 +2492,166 @@ def move(x, y, room):
         else:
             newx = x
             return x, y, newx, newy
-    elif move == "edge":
-        global edge_done
 
-        for x in no_edges:
-            edge_done = False
-            if room == x.name:
-                print("There are no edges to move to in this room.")
-                time.sleep(n)
-                edge_done = True
-                break
-        if edge_done == False:
-            for x in range(0, len(locations)):
-                y = locations[x]
-                if newx == y.xpos and newy == y.ypos:
-                    for x in multiple_edges:
-                        if room == x.name:                            
-                            eval(y.name+"_edges()")
-                            break
-                    else:
-                        try:
-                            eval(y.name+"_edge()")
-                        except NameError:
-                            print("There are no edges to move to in this room.")
-                            time.sleep(n)
+def backrooms_repeated_action(bx, by):
+    print()
+    print("You're in the backrooms.")
+    time.sleep(n)
+    print("Your coordinates are", str(bx)+", "+str(by)+".")
+    time.sleep(n)
+    action = input("What to do? (interact, move, use, examine, inventory, stop): ")
+    if action == "move":
+        backrooms_move(back_gridsize)
+    elif action == "examine":
+        examine(room)
+    elif action == "interact":
+        interact(room)
+    elif action == "inventory":
+        inventory_general()
+    elif action == "use":
+        use(room)
+    elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
+        webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
+        time.sleep(1)
+    elif action == "stop":
+        save()
+        game_on = "ended"
+        sys.exit()
+        return action
+    else:
+        print("You can't do that.")
+        time.sleep(n)
+    
+
+def repeated_action(x, y, newx, newy, wall_counter):
+    global action
+    global game_values_string
+    global ending_condition
+    global game_on
+    global combat_state
+    global statue_state
+    global backrooms_state
+    global bx
+    global by
+    if wall_counter >= 37:
+        wall_god_ending()
+    for x in game_values_string:
+        exec("global "+x)
+    print()
+    if room == "ten_five" and statue_state == "alive" and health > 0:
+        for x in range(0, len(locations)):
+            y = locations[x]
+            if newx == y.xpos and newy == y.ypos:
+                eval(y.name+"_combat()")
+    elif health == 0:
+        death_sequence()
+    elif room == "eight_eleven":
+        backrooms_state = True
+        backrooms_repeated_action(bx, by)
+        return backrooms_state
+    else:
+        room_check(x, y, newx, newy)
+        x = newx
+        y = newy
+        if combat_state == True:
+            return x, newx, y, newy
+        if room == "eight_eleven":
+            backrooms_repeated_action(bx, by)
         else:
-            print("You can't do that.")
+            print("Your co-ordinates are", str(x)+", "+str(y)+".")
             time.sleep(n)
-"""
-def title_load():
+            print("You have", health, "health.")
+            time.sleep(n)
+            action = input("What to do? (interact, move, use, examine, inventory, stop): ")
+            if action == "move":
+                move(x, y, room)
+            elif action == "examine":
+                examine(room)
+            elif action == "interact":
+                interact(room)
+            elif action == "inventory":
+                inventory_general()
+            elif action == "use":
+                use(room)
+            elif action == "https://youtube.com/watch?v=dQw4w9WgXcQ":
+                webbrowser.open("https://youtube.com/watch?v=dQw4w9WgXcQ")
+                time.sleep(1)
+            elif action == "stop":
+                save()
+                """
+                try:
+                    os.remove("save.txt")
+                except Exception:
+                    game_on = True
+                    global game_values
+                    game_values = [restricted_pos, book_num, n, game_on, x, newx, y, newy, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+                    game_values.extend([four_nine_switch_done, five_zero_switch_done])
+                    game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "y", "newy", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+                    game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done"])
+                    file = open("save.txt", "w")
+                    for x, y in zip(game_values, game_values_string):
+                        if y == "weapon":
+                            txt = "weapon="+f'"{weapon}"'+"\n"
+                            file.write(txt)
+                        elif y == "statue_state":
+                            txt = "statue_state="+f'"{statue_state}"'+"\n"
+                            file.write(txt)
+                        else:
+                            txt = str(y+"="+str(x))
+                            file.write(txt)
+                            file.write("\n")
+                    file.close()
+                    game_on = "ended"
+                    return action
+                    sys.exit()
+                """
+                game_on = "ended"
+                return action
+                sys.exit()
+            else:
+                print("You can't do that.")
+                time.sleep(n)
+
+def save():
     try:
-        print ("  _______        _                  _                 _                       __   ___   ")
-        print (" |__   __|      | |        /\      | |               | |                     /_ | / _ \  ")
-        print ("    | | _____  _| |_      /  \   __| |_   _____ _ __ | |_ _   _ _ __ ___      | || | | | ")
-        print ("    | |/ _ \ \/ / __|    / /\ \ / _` \ \ / / _ \ '_ \| __| | | | '__/ _ \     | || | | | ")
-        print ("    | |  __/>  <| |_    / ____ \ (_| |\ V /  __/ | | | |_| |_| | | |  __/     | || |_| | ")
-        print ("    |_|\___/_/\_\\___|  /_/    \_\__,_| \_/ \___|_| |_|\__|\__,_|_|  \___|     |_(_)___/  ")
-        print ("                                                                                         ")
-    except SyntaxWarning:
+        os.remove("save.txt")
+    except Exception:
         pass
-"""   
+    finally:
+        game_on = True
+        global game_values
+        global game_values_string
+        global x
+        global y
+        global newx
+        global newy
+        game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, y, newy, by, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+        game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state])
+        game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "y", "newy", "by", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+        game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state"])
+        file = open("save.txt", "w")
+        for x, y in zip(game_values, game_values_string):
+            if y == "weapon":
+                txt = "weapon="+f'"{weapon}"'+"\n"
+                file.write(txt)
+            elif y == "statue_state":
+                txt = "statue_state="+f'"{statue_state}"'+"\n"
+                file.write(txt)
+            else:
+                txt = str(y+"="+str(x))
+                file.write(txt)
+                file.write("\n")
+        file.close()
+
+def title_load():
+    print ("     _______        _                  _                 _                       __  __  ")
+    print ("    |__   __|      | |        /.      | |               | |                     /_ |/_ | ")
+    print ("       | | _____  _| |_      /  .   __| |_   _____ _ __ | |_ _   _ _ __ ___      | | | | ")
+    print ("       | |/ _ . ./ / __|    / /. . / _` . . / / _ . '_ .| __| | | | '__/ _ .     | | | | ")
+    print ("       | |  __/>  <| |_    / ____ . (_| |. V /  __/ | | | |_| |_| | | |  __/     | |_| | ")
+    print ("       |_|.___/_/._..__|  /_/    ._.__,_| ._/ .___|_| |_|.__|.__,_|_|  .___|     |_(_)_| ")
+    print()
+  
 def game_load():
     global game_on
     time_check()
@@ -2605,8 +2661,6 @@ def game_load():
     return game_on
     
 while game_on == False:
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
     start = input("Turn game on? (yes/no): ")
     if start == "yes":
         title_load()
@@ -2652,5 +2706,8 @@ while game_on == True:
         ending_condition = True
         game_on = False
         break
-    repeated_action(x, y, newx, newy, wall_counter)
+    if backrooms_state == False:
+        repeated_action(x, y, newx, newy, wall_counter)
+    elif backrooms_state == True:
+        backrooms_repeated_action(bx, by)
     
