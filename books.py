@@ -3,7 +3,7 @@ def book():
     print("This is the tutorial book!")
     time.sleep(3)
     while True:
-        tutorial = input("What would you like to know about? (interact, examine, move, use, inventory, items, book generation, walls, leave): ")
+        tutorial = input("What would you like to know about? (interact, examine, move, use, inventory, items, book generation, walls, Daniel Thrasher, leave): ")
         if tutorial == "interact":
             print("Interacting with an item either causes an item to be gained, or for something to occur or activate.")
             time.sleep(2)
@@ -49,6 +49,23 @@ def book():
             time.sleep(2)
         elif tutorial == "walls":
             print("Read the wall lore book for more information.")
+            time.sleep(2)
+        elif tutorial == "Daniel Thrasher":
+            print("The greatest individual to ever live, Daniel Thrasher was declared missing in 2027.")
+            time.sleep(2)
+            print("He went inside of a dark castle-like place, and got lost.")
+            time.sleep(2)
+            print("He is presumed dead. Although...")
+            time.sleep(2)
+            print("Some think him still alive, a spirit, taking the form of any character he once presented as in his sketches.")
+            time.sleep(2)
+            print("All those who have claimed to see him have either died or escaped the castle walls.")
+            time.sleep(2)
+            print("Note down if you see him.")
+            time.sleep(2)
+            print("We need information on that. My idol won't have died for nothing.")
+            time.sleep(2)
+            print("At least I can watch his sketches forevermore...")
             time.sleep(2)
         elif tutorial == "leave":
             print("Book finished!")
