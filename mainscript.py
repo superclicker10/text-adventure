@@ -7,18 +7,18 @@ from location import *
 from locations import *
 from wallmessages import *
 from books import *
-restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "18", "20", "21", "22", "27", "33", "37", "38", "39", "40", "41", "42", "43", "410", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "73", "77", "710", "83", "87", "88", "89", "92", "911", "103", "104", "106", "107", "108", "109", "1010"]
+restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "08", "18", "19", "20", "21", "22", "27", "28", "29", "31", "32", "33", "37", "38", "39", "40", "41", "42", "43", "410", "411", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "68", "69", "610", "73", "77", "78", "79", "710", "711", "83", "87", "88", "89", "812", "91", "92", "911", "912", "103", "104", "106", "107", "108", "109", "1010", "113", "114", "116", "117", "118", "119", "1110", "125"]
 book_num = random.randint(1, 100)
 action = None
 n = 1
 count = 0
 game_on = False
-x = 8
-newx = 8
-bx = 24
-newbx = 24
-y = 10
-newy = 10
+x = 0
+newx = 0
+bx = 0    # FIX COORDS BEFORE RELEASE
+newbx = 0
+y = 0
+newy = 0
 by = 0
 newby = 0
 room = "lobby"
@@ -44,10 +44,18 @@ backrooms_state = False
 poison_active = False
 poison_timer = 0
 back_gridsize = random.randint(25, 50)
+mjelly_timer = 0
+mvt_speed = 1
 b_man_posx = b_man_posy = 0
 b_exit_posx = b_exit_posy = 0
 b_noclip_posx = b_noclip_posy = 0
 b_fall_posx = b_fall_posy = 0
+b_awater_posx = b_awater_posy = 0
+b_radio_posx = b_radio_posy = 0
+b_medkit_posx = b_medkit_posy = 0
+b_mjelly_posx = b_mjelly_posy = 0
+b_camera_posx = b_camera_posy = 0
+b_flashlight_posx = b_flashlight_posy = 0
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done = False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
 zero_four_wall_done = zero_five_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = four_seven_wall_done = four_eight_wall_done = four_nine_wall_done = five_one_wall_done = five_two_wall_done = five_three_wall_done = five_six_wall_done = False
@@ -57,9 +65,11 @@ five_zero_wall_backup = zero_six_wall_backup = six_four_wall_backup = six_six_wa
 eight_ten_wall_done = nine_seven_wall_done = nine_eight_wall_done = nine_nine_wall_done = nine_ten_wall_done = ten_five_wall_done = False
 eight_ten_wall_backup = nine_seven_wall_backup = nine_eight_wall_backup = nine_nine_wall_backup = nine_ten_wall_backup = ten_five_wall_backup = 0
 game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, newby, y, newy, by, newby, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
-game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state, poison_timer, back_gridsize, b_man_posx, b_man_posy, b_exit_posx, b_exit_posy, b_noclip_posx, b_noclip_posy, b_fall_posx, b_fall_posy])
+game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state, poison_timer, back_gridsize, mjelly_timer, mvt_speed, b_man_posx, b_man_posy, b_exit_posx, b_exit_posy, b_noclip_posx, b_noclip_posy, b_fall_posx, b_fall_posy])
+game_values.extend([b_awater_posx, b_awater_posy, b_radio_posx, b_radio_posy, b_medkit_posx, b_medkit_posy, b_mjelly_posx, b_mjelly_posy, b_camera_posx, b_camera_posy, b_flashlight_posx, b_flashlight_posy])
 game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "newbx", "y", "newy", "by", "newby", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
-game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state", "poison_timer", "back_gridsize", "b_man_posx", "b_man_posy", "b_exit_posx", "b_exit_posy", "b_noclip_posx", "b_noclip_posy", "b_fall_posx", "b_fall_posy"])
+game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state", "poison_timer", "back_gridsize", "mjelly_timer", "mvt_speed", "b_man_posx", "b_man_posy", "b_exit_posx", "b_exit_posy", "b_noclip_posx", "b_noclip_posy", "b_fall_posx", "b_fall_posy"])
+game_values_string.extend(["b_awater_posx", "b_awater_posy", "b_radio_posx", "b_radio_posy", "b_medkit_posx", "b_medkit_posy", "b_mjelly_posx", "b_mjelly_posy", "b_camera_posx", "b_camera_posy", "b_flashlight_posx", "b_flashlight_posy"])
 
 def time_check():
     global n
@@ -1657,8 +1667,13 @@ def backrooms_entry():
     b_exit_gen(back_gridsize)
     b_noclip_gen(back_gridsize)
     b_fall_gen(back_gridsize)
+    b_awater_gen(back_gridsize)
+    b_radio_gen(back_gridsize)
+    b_medkit_gen(back_gridsize)
+    b_mjelly_gen(back_gridsize)
+    b_camera_gen(back_gridsize)
+    b_flashlight_gen(back_gridsize)
     backrooms_state = True
-    print(backrooms_state)
     return backrooms_state
 
 def nine_three():
@@ -2278,13 +2293,14 @@ def oob(x, y, newx, newy, newbx, newby):
 def move(x, y, room):
     global newx
     global newy
+    global mvt_speed
     if combat_state == True:
         move = "edge"
     else:
         move = input("Where are you moving to? (+x, -x, +y, -y, edge): ")
     if move == "+x":
         x_backup = x
-        newx = x + 1
+        newx = x + mvt_speed
         if str(newx)+str(newy) in restricted_pos:
             print("This position is restricted.")
             time.sleep(n)
@@ -2294,7 +2310,7 @@ def move(x, y, room):
             return x, y, newx, newy
     elif move == "-x":
         x_backup = x
-        newx = x - 1
+        newx = x - mvt_speed
         if newx <= -1:
             oob(x, y, newx, newy, newbx, newby)
             newx = x_backup
@@ -2307,7 +2323,7 @@ def move(x, y, room):
             return x, y, newx, newy
     elif move == "+y":
         y_backup = y
-        newy = y + 1
+        newy = y + mvt_speed
         if str(newx)+str(newy) in restricted_pos:
             print("This position is restricted.")
             time.sleep(n)
@@ -2317,7 +2333,7 @@ def move(x, y, room):
             return x, y, newx, newy
     elif move == "-y":
         y_backup = y
-        newy = y - 1
+        newy = y - mvt_speed
         if newy <= -1:
             oob(x, y, newx, newy, newbx, newby)
             newy = y_backup
@@ -2388,6 +2404,7 @@ def inventory_general():
     choice = input("View or drop item from inventory?: ")
     if choice == "view":
         print(inventory)
+        time.sleep(n)
     elif choice == "drop":
         print(inventory)
         if inventory == []:
@@ -2437,6 +2454,21 @@ def use(room):
             
 def use_navigation(item, room):
     if item == "book":
+        eval(f'{item}_use(room)')
+    elif item == "fish book":
+        fish_book_use(room)
+    elif item == "wall lore book":
+        wall_book_use(room)
+    elif item == "note" or item == "apple" or item == "screen":
+        eval(f'{item}_use()')
+    elif item == "almond water":
+        b_awater_use()
+    elif item == "moth jelly":
+        b_mjelly_use()
+    else:
+        eval(f'b_{item}_use()')
+    """
+    if item == "book":
         book_use(room)
     elif item == "fish book":
         fish_book_use(room)
@@ -2448,8 +2480,14 @@ def use_navigation(item, room):
         apple_use()
     elif item == "screen":
         screen_use()
+    elif item == "almond water":
+        b_awater_use()
+    elif item == "radio":
+        b_radio_use()
+    elif item == "
     else:
         print("You can't use that item.")
+    """
     
 
 def room_check(x, y, newx, newy):
@@ -2495,17 +2533,69 @@ def b_fall_gen(back_gridsize):
     b_fall_posx = random.randint(0, back_gridsize)
     b_fall_posy = random.randint(0, back_gridsize)
     return b_fall_posx, b_fall_posy
+#backrooms items
+def b_awater_gen(back_gridsize):
+    global b_awater_posx
+    global b_awater_posy
+    b_awater_posx = random.randint(0, back_gridsize)
+    b_awater_posy = random.randint(0, back_gridsize)
+    return b_awater_posx, b_awater_posy
+
+def b_radio_gen(back_gridsize):
+    global b_radio_posx
+    global b_radio_posy
+    b_radio_posx = random.randint(0, back_gridsize)
+    b_radio_posy = random.randint(0, back_gridsize)
+    return b_radio_posx, b_radio_posy
+
+def b_medkit_gen(back_gridsize):
+    global b_medkit_posx
+    global b_medkit_posy
+    b_medkit_posx = random.randint(0, back_gridsize)
+    b_medkit_posy = random.randint(0, back_gridsize)
+    return b_medkit_posx, b_medkit_posy
+
+def b_mjelly_gen(back_gridsize):
+    global b_mjelly_posx
+    global b_mjelly_posy
+    b_mjelly_posx = random.randint(0, back_gridsize)
+    b_mjelly_posy = random.randint(0, back_gridsize)
+    return b_mjelly_posx, b_mjelly_posy
+
+def b_camera_gen(back_gridsize):
+    global b_camera_posx
+    global b_camera_posy
+    b_camera_posx = random.randint(0, back_gridsize)
+    b_camera_posy = random.randint(0, back_gridsize)
+    return b_camera_posx, b_camera_posy
+
+def b_flashlight_gen(back_gridsize):
+    global b_flashlight_posx
+    global b_flashlight_posy
+    b_flashlight_posx = random.randint(0, back_gridsize)
+    b_flashlight_posy = random.randint(0, back_gridsize)
+    return b_flashlight_posx, b_flashlight_posy
 
 def b_man_check(newbx, newby, b_man_posx, b_man_posy):
     global poison_timer
+    global inventory
     if str(newbx)+str(newby) == str(b_man_posx)+str(b_man_posy):
-        print("You ran into the entity!")
-        time.sleep(n)
-        print("He hits you and runs away...")
-        time.sleep(n)
-        poison_timer = 3
-        b_man_gen(back_gridsize)
-        return poison_timer
+        if "flashlight" in inventory:
+            print("The monster tries to damage you, but is blinded by the flashlight.")
+            time.sleep(n)
+            print("It runs away, but your flashlight no longer functions.")
+            time.sleep(n)
+            inventory.remove("flashlight")
+            b_man_gen(back_gridsize)
+            return inventory
+        else:
+            print("You ran into the entity!")
+            time.sleep(n)
+            print("He hits you and runs away...")
+            time.sleep(n)
+            poison_timer = 3
+            b_man_gen(back_gridsize)
+            return poison_timer
 
 def b_exit_check(newbx, newby, b_exit_posx, b_exit_posy):
     if str(newbx)+str(newby) == str(b_exit_posx)+str(b_exit_posy):
@@ -2544,7 +2634,7 @@ def b_noclip_check(newbx, newby, b_noclip_posx, b_noclip_posy):
         room = "eight_ten"
         newy = y = 10
         return backrooms_state, room, newy, y
-
+    
 def b_fall_check(newbx, newby, b_fall_posx, b_fall_posy):
     if str(newbx)+str(newby) == str(b_fall_posx)+str(b_fall_posy):
         print("You fall through reality...")
@@ -2552,6 +2642,73 @@ def b_fall_check(newbx, newby, b_fall_posx, b_fall_posy):
         print("The void is everlasting and eternal.")
         time.sleep(n)
         death_sequence()
+#backrooms item checks
+def b_awater_check(newbx, newby, b_awater_posx, b_awater_posy):
+    if str(newbx)+str(newby) == str(b_awater_posx)+str(b_awater_posy):
+        if "almond water" not in inventory:
+            print("You pick up a can of almond water.")
+            time.sleep(n)
+            print("It regenerates 5 health upon use.")
+            time.sleep(n)
+            add_inventory("almond water")
+            b_awater_gen(back_gridsize)
+            time.sleep(n)
+
+def b_radio_check(newbx, newby, b_radio_posx, b_radio_posy):
+    if str(newbx)+str(newby) == str(b_radio_posx)+str(b_radio_posy):
+        if "radio" not in inventory:
+            print("You pick up a radio.")
+            time.sleep(n)
+            print("Using it will reveal locations of all things.")
+            time.sleep(n)
+            add_inventory("radio")
+            b_radio_gen(back_gridsize)
+            time.sleep(n)
+
+def b_medkit_check(newbx, newby, b_medkit_posx, b_medkit_posy):
+    if str(newbx)+str(newby) == str(b_medkit_posx)+str(b_medkit_posy):
+        if "medkit" not in inventory:
+            print("You pick up a medkit.")
+            time.sleep(n)
+            print("It regenerates 10 health upon use.")
+            time.sleep(n)
+            add_inventory("medkit")
+            b_medkit_gen(back_gridsize)
+            time.sleep(n)
+
+def b_mjelly_check(newbx, newby, b_mjelly_posx, b_mjelly_posy):
+    if str(newbx)+str(newby) == str(b_mjelly_posx)+str(b_mjelly_posy):
+        if "moth jelly" not in inventory:
+            print("You pick up a jar of moth jelly.")
+            time.sleep(n)
+            print("It doubles movement speed for 3 turns upon use.")
+            time.sleep(n)
+            add_inventory("moth jelly")
+            b_mjelly_gen(back_gridsize)
+            time.sleep(n)
+
+def b_camera_check(newbx, newby, b_camera_posx, b_camera_posy):
+    if str(newbx)+str(newby) == str(b_camera_posx)+str(b_camera_posy):
+        if "camera" not in inventory:
+            print("You pick up a camera.")
+            time.sleep(n)
+            print("With it, you are able to find the location of the entity here, and reveal some data on it.")
+            time.sleep(n)
+            add_inventory("camera")
+            b_camera_gen(back_gridsize)
+            time.sleep(n)
+
+def b_flashlight_check(newbx, newby, b_flashlight_posx, b_flashlight_posy):
+    if str(newbx)+str(newby) == str(b_flashlight_posx)+str(b_flashlight_posy):
+        if "flashlight" not in inventory:
+            print("You pick up a flashlight.")
+            time.sleep(n)
+            print("If you are apporached by the entity, it can block one hit of damage.")
+            time.sleep(n)
+            add_inventory("flashlight")
+            b_flashlight_gen(back_gridsize)
+            time.sleep(n)
+
 
 def poison_check():
     global poison_timer
@@ -2564,7 +2721,134 @@ def poison_check():
         poison_timer = poison_timer - 1
     else:
         pass
-    
+
+def mjelly_check():
+    global mjelly_timer
+    global mvt_speed
+    if mjelly_timer > 0:
+        print("Your movement speed remains for", mjelly_timer, "more turns.")
+        time.sleep(n)
+        mjelly_timer = mjelly_timer - 1
+    else:
+        mvt_speed = 1
+    return mjelly_timer, mvt_speed
+
+def b_awater_use():
+    global health
+    global inventory
+    if "almond water" in inventory:
+        if health >= 10:
+            print("You already have maximum health.")
+            time.sleep(n)
+        else:
+            print("You drink the almond water.")
+            time.sleep(n)
+            print("Added 5 to your current health! (cap of 10)")
+            time.sleep(n)
+            inventory.remove("almond water")
+            health = health + 5
+            if health > 10:
+                health = 10
+    else:
+        print("You can't use that.")
+        time.sleep(n)
+    return health, inventory
+
+def b_radio_use():
+    global inventory
+    for x in game_values_string:
+        exec("global "+x)
+    if "radio" in inventory:
+        print("The coordinates of everything reveal themselves.")
+        time.sleep(n)
+        print("The entity is located at ("+str(b_man_posx)+","+str(b_man_posy)+")")
+        time.sleep(n)
+        print("The exit is located at ("+str(b_exit_posx)+","+str(b_exit_posy)+")")
+        time.sleep(n)
+        print("The noclip zone is located at ("+str(b_noclip_posx)+","+str(b_noclip_posy)+")")
+        time.sleep(n)
+        print("The void is located at ("+str(b_fall_posx)+","+str(b_fall_posy)+")")
+        time.sleep(n)
+        print("Almond water is located at ("+str(b_awater_posx)+","+str(b_awater_posy)+")")
+        time.sleep(n)
+        print("A medkit is located at ("+str(b_medkit_posx)+","+str(b_medkit_posy)+")")
+        time.sleep(n)
+        print("Moth jelly is located at ("+str(b_mjelly_posx)+","+str(b_mjelly_posy)+")")
+        time.sleep(n)
+        print("A camera is located at ("+str(b_camera_posx)+","+str(b_camera_posy)+")")
+        time.sleep(n)
+        print("A flashlight is located at ("+str(b_flashlight_posx)+","+str(b_flashlight_posy)+")")
+        time.sleep(n)
+        print("The radio shuts off, and is not usable anymore...")
+        time.sleep(n)
+        inventory.remove("radio")
+    else:
+        print("You can't use that.")
+        time.sleep(n)
+    return inventory
+
+def b_medkit_use():
+    global health
+    global inventory
+    if "medkit" in inventory:
+        if health >= 10:
+            print("You already have maximum health.")
+            time.sleep(n)
+        else:
+            print("You use the medkit.")
+            time.sleep(n)
+            print("Added 10 to your current health! (cap of 10)")
+            time.sleep(n)
+            inventory.remove("medkit")
+            health = health + 10
+            if health > 10:
+                health = 10
+    else:
+        print("You can't use that.")
+        time.sleep(n)
+    return health, inventory
+
+def b_mjelly_use():
+    global mjelly_timer
+    global mvt_speed
+    global inventory
+    if "moth jelly" in inventory:
+        print("You eat the moth jelly.")
+        time.sleep(n)
+        print("Your movement speed increases to 2 spaces per turn for three turns.")
+        time.sleep(n)
+        mjelly_timer = 3
+        mvt_speed = 2
+        inventory.remove("moth jelly")
+    else:
+        print("You can't use that.")
+        time.sleep(n)
+    return mjelly_timer, mvt_speed, inventory
+
+def b_camera_use():
+    global inventory
+    global b_man_posx
+    global b_man_posy
+    if "camera" in inventory:
+        print("You take a picture with the camera.")
+        time.sleep(n)
+        print("It reveals the coordinates of the entity at ("+str(b_man_posx)+","+str(b_man_posy)+")")
+        time.sleep(n)
+        print("The entity is a long black creature with badly proportioned hands and legs.")
+        time.sleep(n)
+        print("It is made of a black, bacteria-like substance.")
+        time.sleep(n)
+        print("It would probably cause some damage if it was to come into contact with you.")
+        time.sleep(n)
+        print("The camera stops functioning...")
+        time.sleep(n)
+        inventory.remove("camera")
+    else:
+        print("You can't use that item.")
+        time.sleep(n)
+    return inventory
+        
+        
     
 
 def backrooms_move(back_gridsize):
@@ -2572,6 +2856,7 @@ def backrooms_move(back_gridsize):
     global by
     global newbx
     global newby
+    global mvt_speed
     directions = ["+x", "+y", "-x", "-y"]
     b_direction = random.choices(directions, k=1)
     b_direction = "".join(b_direction)
@@ -2581,43 +2866,43 @@ def backrooms_move(back_gridsize):
         time.sleep(n)
     elif move == "+x":
         bx_backup = bx
-        newbx = bx + 1
+        newbx = bx + mvt_speed
         if newbx >= back_gridsize:
             oob(bx, by, newbx, newby, newbx, newby)
             newbx = bx_backup
         else:
             newby = by
-            bx = bx + 1
+            bx = bx + mvt_speed
             return bx, by, newbx, newby
     elif move == "-x":
         bx_backup = bx
-        newbx = bx - 1
-        if newbx >= back_gridsize:
+        newbx = bx - mvt_speed
+        if newbx >= back_gridsize or newbx <= -1:
             oob(bx, by, newbx, newby, newbx, newby)
             newbx = bx_backup
         else:
             newby = by
-            bx = bx - 1
+            bx = bx - mvt_speed
             return bx, by, newbx, newby
     elif move == "+y":
         by_backup = by
-        newby = by + 1
+        newby = by + mvt_speed
         if newby >= back_gridsize:
             oob(bx, by, newbx, newby, newbx, newby)
             newby = by_backup
         else:
             newbx = bx
-            by = by + 1
+            by = by + mvt_speed
             return bx, by, newbx, newby
     elif move == "-y":
         by_backup = by
-        newby = by - 1
-        if newby >= back_gridsize:
+        newby = by - mvt_speed
+        if newby >= back_gridsize or newby <= -1:
             oob(bx, by, newbx, newby, newbx, newby)
             newby = by_backup
         else:
             newbx = bx
-            by = by - 1
+            by = by - mvt_speed
             return bx, by, newbx, newby
 
 def backrooms_repeated_action(bx, by):
@@ -2631,32 +2916,48 @@ def backrooms_repeated_action(bx, by):
     global newbx
     global newby
     print()
+    poison_check()
     b_man_check(newbx, newby, b_man_posx, b_man_posy)
     b_exit_check(newbx, newby, b_exit_posx, b_exit_posy)
     b_noclip_check(newbx, newby, b_noclip_posx, b_noclip_posy)
     b_fall_check(newbx, newby, b_fall_posx, b_fall_posy)
-    poison_check()
+    b_awater_check(newbx, newby, b_awater_posx, b_awater_posy)
+    b_radio_check(newbx, newby, b_radio_posx, b_radio_posy)
+    b_medkit_check(newbx, newby, b_medkit_posx, b_medkit_posy)
+    b_mjelly_check(newbx, newby, b_mjelly_posx, b_mjelly_posy)
+    b_camera_check(newbx, newby, b_camera_posx, b_camera_posy)
+    b_flashlight_check(newbx, newby, b_flashlight_posx, b_flashlight_posy)
+    mjelly_check()
     if health == 0:
         death_sequence()
-    print(b_man_posx, b_man_posy)
-    print(b_exit_posx, b_exit_posy)
-    print(b_noclip_posx, b_noclip_posy)
-    print(b_fall_posx, b_fall_posy)
+    """    
+    print(b_man_posx, b_man_posy, "backrooms man")
+    print(b_exit_posx, b_exit_posy, "ending")
+    print(b_noclip_posx, b_noclip_posy, "noclip to main")
+    print(b_fall_posx, b_fall_posy, "void")
+    print(b_awater_posx, b_awater_posy, "almond water")
+    print(b_radio_posx, b_radio_posy, "radio")
+    print(b_medkit_posx, b_medkit_posy, "medkit")
+    print(b_mjelly_posx, b_mjelly_posy, "mjelly")
+    print(b_camera_posx, b_camera_posy, "camera")
+    print(b_flashlight_posx, b_flashlight_posy, "flashlight")
+    """
     if backrooms_state == False:
         repeated_action(x, y, newx, newy, wall_counter)
     else:
         print("You're in the backrooms.")
         time.sleep(n)
-        print("Your coordinates are", str(newbx)+", "+str(newby)+".")
+        print("Your coordinates are", str(bx)+", "+str(by)+".")
         time.sleep(n)
         print("You have", health, "health.")
         time.sleep(n)
         action = input("What to do? (interact, move, use, examine, inventory, stop): ")
-        if action == "tp":
+        """
+        if action == "tp":  #REMOVE FOR FULL RELEASE
             newbx = bx = int(input("x: "))
             newby = by = int(input("y: "))
+        """
         if action == "move":
-            print(poison_active)
             backrooms_move(back_gridsize)
         elif action == "examine":
             examine(room)
@@ -2709,6 +3010,8 @@ def repeated_action(x, y, newx, newy, wall_counter):
         #backrooms_repeated_action(bx, by)
         #return backrooms_state
     else:
+        poison_check()
+        mjelly_check()
         room_check(x, y, newx, newy)
         x = newx
         y = newy
@@ -2760,13 +3063,18 @@ def save():
         global y
         global newx
         global newy
-        game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, newbx, y, newy, by, newby, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
-        game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state, back_gridsize, b_man_posx, b_man_posy, b_exit_posx, b_exit_posy, b_noclip_posx, b_noclip_posy, b_fall_posx, b_fall_posy])
-        game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "newbx", "y", "newy", "by", "newby", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "atk_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
-        game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state", "back_gridsize", "b_man_posx", "b_man_posy", "b_exit_posx", "b_exit_posy", "b_noclip_posx", "b_noclip_posy", "b_fall_posx", "b_fall_posy"])
+        game_values = [restricted_pos, book_num, n, game_on, x, newx, bx, newby, y, newy, by, newby, room, combat_state, statue_state, inventory, inv_size, health, weapon, atk_power, ending_condition, one_one_door_interact_state, bookshelf_interact_state, wall_counter, general_backup, one_two_door_interact, one_seven_switch_done]
+        game_values.extend([four_nine_switch_done, five_zero_switch_done, backrooms_state, poison_timer, back_gridsize, mjelly_timer, mvt_speed, b_man_posx, b_man_posy, b_exit_posx, b_exit_posy, b_noclip_posx, b_noclip_posy, b_fall_posx, b_fall_posy])
+        game_values.extend([b_awater_posx, b_awater_posy, b_radio_posx, b_radio_posy, b_medkit_posx, b_medkit_posy, b_mjelly_posx, b_mjelly_posy, b_camera_posx, b_camera_posy, b_flashlight_posx, b_flashlight_posy])
+        game_values_string = ["restricted_pos", "book_num", "n", "game_on", "x", "newx", "bx", "newbx", "y", "newy", "by", "newby", "room", "combat_state", "statue_state", "inventory", "inv_size", "health", "weapon", "attack_power", "ending_condition", "one_one_door_interact_state", "bookshelf_interact_state", "wall_counter", "general_backup", "one_two_door_interact", "one_seven_switch_done"]
+        game_values_string.extend(["four_nine_switch_done", "five_zero_switch_done", "backrooms_state", "poison_timer", "back_gridsize", "mjelly_timer", "mvt_speed", "b_man_posx", "b_man_posy", "b_exit_posx", "b_exit_posy", "b_noclip_posx", "b_noclip_posy", "b_fall_posx", "b_fall_posy"])
+        game_values_string.extend(["b_awater_posx", "b_awater_posy", "b_radio_posx", "b_radio_posy", "b_medkit_posx", "b_medkit_posy", "b_mjelly_posx", "b_mjelly_posy", "b_camera_posx", "b_camera_posy", "b_flashlight_posx", "b_flashlight_posy"])
         file = open("save.txt", "w")
         for x, y in zip(game_values, game_values_string):
-            if y == "weapon":
+            if y == "room":
+                txt = "room="+f'"{room}"'+"\n"
+                file.write(txt)
+            elif y == "weapon":
                 txt = "weapon="+f'"{weapon}"'+"\n"
                 file.write(txt)
             elif y == "statue_state":
