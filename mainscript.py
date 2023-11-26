@@ -13,17 +13,17 @@ action = None
 n = 1
 count = 0
 game_on = False
-x = 0
-newx = 0
+x = 8
+newx = 8
 bx = 0    # FIX COORDS BEFORE RELEASE
 newbx = 0
-y = 0
-newy = 0
+y = 10
+newy = 10
 by = 0
 newby = 0
 room = "lobby"
 combat_state = False
-inventory = []
+inventory = ["button"]
 inv_size = 3
 health = 10
 statue_health = 10
@@ -56,6 +56,7 @@ b_medkit_posx = b_medkit_posy = 0
 b_mjelly_posx = b_mjelly_posy = 0
 b_camera_posx = b_camera_posy = 0
 b_flashlight_posx = b_flashlight_posy = 0
+b_descriptions = ["You're in the backrooms.", "The yellow tinge of the rooms appears to get worse.", "Sanity leaks from your mind.", "You feel a threatening aura amongst you.", "You feel very suffocated.", "You wander around aimlessly."]
 lobby_wall = bookshelf_wall = one_one_wall_done = one_two_wall_done = one_three_wall_done = one_seven_wall_done = lectern_wall_done = two_six_wall_done = False
 lobby_wall_backup = bookshelf_wall_backup = one_one_wall_backup = one_two_wall_backup = one_three_wall_backup = one_seven_wall_backup = lectern_room_wall_backup = two_six_wall_backup = 0
 zero_four_wall_done = zero_five_wall_done = three_four_wall_done = three_six_wall_done = four_four_wall_done = four_seven_wall_done = four_eight_wall_done = four_nine_wall_done = five_one_wall_done = five_two_wall_done = five_three_wall_done = five_six_wall_done = False
@@ -282,6 +283,28 @@ def zero_six_examine(obj_examine):
         print("You can't examine that.")
         time.sleep(n)
 
+def button_use():
+    global inventory
+    global backrooms_state
+    if "button" in inventory:
+        if backrooms_state != True:
+            print("When you press the button, a holographic screen appears.")
+            time.sleep(n)
+            print("'If you use this in the Backrooms...")
+            time.sleep(n)
+            print("'...it can tell you everything.")
+            time.sleep(n)
+            print("Perhaps if you find the place it talks about it can help you.")
+            time.sleep(n)
+        else:
+            print("The radio is located at ("+str(b_radio_posx)+", "+str(b_radio_posy)+")")
+            time.sleep(n)
+            print("Maybe you should go there.")
+            time.sleep(n)
+    else:
+        print("You can't use that.")
+        time.sleep(n)
+
 
         
 def book_room():
@@ -422,13 +445,19 @@ def hole_ending_sequence():
     health = health - 2
     if health <= 0:
         print("You jump in the hole, falling forever and ever.")
+        time.sleep(5)
+        """
+        print("A man looks at you as you fall, holding a cute kitty cat.")
         time.sleep(3)
+        print("'What kinda guy falls down a hole like that?' he says.")
+        time.sleep(3)
+        """
         for x in range(0, 250000):
             print("DEATH", end="")
         for x in range(0, 150):
             print("\n")
         print("ENDING 1 - FALLING INTO THE DEPTHS")
-        time.sleep(4)
+        time.sleep(5)
         ending_condition = True
     else:
         print("You jump into the hole, falling forever and ever...")
@@ -2238,9 +2267,10 @@ def eleven_five():
 
 def freedom_ending():
     print("You walk out into the open air, and feel the breeze among your face.")
-    time.sleep(3)
+    time.sleep(5)
     print("You feel comfort and happiness, as you start to walk toward your life again.")
-    time.sleep(3)
+    time.sleep(5)
+    """
     print("But something walks up behind you.")
     time.sleep(3)
     print("'Are you sure you wanna go?' A man in a high-visibility jacket and fashionable hairstyle walks from the exit.")
@@ -2251,45 +2281,60 @@ def freedom_ending():
     time.sleep(3)
     print("(I hope you like rickrolls, senpai. I do. I certainly do.)")
     time.sleep(3)
+    print("The man transforms into seemingly the same person, but without a high voice, or the jacket.")
+    time.sleep(3)
+    print("In response to the music he appears to vomit inside is own mouth, but doesn't come out.")
+    time.sleep(3)
+    print("'Did you just-' you ask, but are cut off.")
+    time.sleep(3)
+    print("'Mhmm.' he replies.")
+    time.sleep(3)
+    print("'And then you swallowed it?' you ask.")
+    time.sleep(3)
+    print("'Mhmm....' he responds, more gravely this time.")
+    time.sleep(3)
+    print("The man disappears.")
+    time.sleep(3)
+    """
     print("You are free.")
-    time.sleep(3)
+    time.sleep(5)
     print("ENDING 3 - FREEDOM")
-    time.sleep(3)
+    time.sleep(5)
     print("(This is the True Ending to the game. Now you can restart to find all the secrets this game has to offer.)")
-    time.sleep(3)
+    time.sleep(5)
     sys.exit()
 
 
 
 def wall_god_ending():
     print("As you touch the very last wall there is...")
-    time.sleep(2)
+    time.sleep(5)
     print("A godly energy begins to seep from the walls. It manifests into a ghostly being.")
-    time.sleep(2)
+    time.sleep(5)
     print("'Thank you for freeing me...' it says.")
-    time.sleep(2)
+    time.sleep(5)
     print("'You read the book, didn't you? And found how to free me...'")
-    time.sleep(2)
+    time.sleep(5)
     print("'Even if you haven't, I applaud your effort.'")
-    time.sleep(2)
+    time.sleep(5)
     print("'I have been trapped in these walls for many hundreds of years.'")
-    time.sleep(2)
+    time.sleep(5)
     print("'Watching time pass in these narrow halls.'")
-    time.sleep(2)
+    time.sleep(5)
     print("'I could only watch as you went through this complex. Begging for you to touch the walls.'")
-    time.sleep(2)
+    time.sleep(5)
     print("'The walls contain my energy, to be only released upon touch.'")
-    time.sleep(2)
+    time.sleep(5)
     print("'But this place was abandoned. So alas, nothing.")
-    time.sleep(2)
+    time.sleep(5)
     print("'You should continue your adventure. I will roam these lands until I am called upon once again.'")
-    time.sleep(2)
+    time.sleep(5)
     print("'Goodbye, mortal...'")
-    time.sleep(2)
+    time.sleep(5)
     print("The deity floats away. You are confused, but know you have saved a trapped being.")
-    time.sleep(2)
+    time.sleep(5)
     print("ENDING 4 - FREEING THE WALL GOD")
-    time.sleep(4)
+    time.sleep(5)
     sys.exit()
 
 def oob(x, y, newx, newy, newbx, newby):
@@ -2469,7 +2514,7 @@ def use_navigation(item, room):
         fish_book_use(room)
     elif item == "wall lore book":
         wall_book_use(room)
-    elif item == "note" or item == "apple" or item == "screen":
+    elif item == "note" or item == "apple" or item == "screen" or item == "button":
         eval(f'{item}_use()')
     elif item == "almond water":
         b_awater_use()
@@ -2601,8 +2646,14 @@ def b_man_check(newbx, newby, b_man_posx, b_man_posy):
         else:
             print("You ran into the entity!")
             time.sleep(n)
-            print("He hits you and runs away...")
+            print("It slaps you with a towel, and runs away cackling.")
             time.sleep(n)
+            print("It hits you and runs away...")
+            time.sleep(n)
+            """
+            print("In the distance you hear '...32 counts of doing this-' followed by the same sound that happened when you got hit.")
+            time.sleep(n)
+            """
             poison_timer = 3
             b_man_gen(back_gridsize)
             return poison_timer
@@ -2614,17 +2665,17 @@ def b_exit_check(newbx, newby, b_exit_posx, b_exit_posy):
         print("You jump through.")
         time.sleep(n)
         print("You emerge from a pipe into a river.")
-        time.sleep(2)
+        time.sleep(5)
         print("In an open world, away from the torture of the humming lights and the yellow wallpaper.")
-        time.sleep(2)
+        time.sleep(5)
         print("You embrace the breeze.")
-        time.sleep(2)
+        time.sleep(5)
         print("Freedom at last. But somehow it feels like that closed area had a proper way out.")
-        time.sleep(2)
+        time.sleep(5)
         print("One that didn't involve The Backrooms.")
-        time.sleep(2)
+        time.sleep(5)
         print("ENDING 2 - ESCAPED THE BACKROOMS")
-        time.sleep(4)
+        time.sleep(5)
         sys.exit()
 
 def b_noclip_check(newbx, newby, b_noclip_posx, b_noclip_posy):
@@ -2955,7 +3006,8 @@ def backrooms_repeated_action(bx, by):
     if backrooms_state == False:
         repeated_action(x, y, newx, newy, wall_counter)
     else:
-        print("You're in the backrooms.")
+        desc = random.randint(0, 5)
+        print(b_descriptions[desc])
         time.sleep(n)
         print("Your coordinates are", str(bx)+", "+str(by)+".")
         time.sleep(n)
