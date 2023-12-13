@@ -7,6 +7,7 @@ from location import *
 from locations import *
 from wallmessages import *
 from books import *
+#v1.1bf2 = fixed picking up key more than once not working, fixed being unable to use key
 restricted_pos = ["01", "02", "03", "04", "05", "06", "07", "08", "18", "19", "20", "21", "22", "27", "28", "29", "31", "32", "33", "37", "38", "39", "40", "41", "42", "43", "410", "411", "55", "54", "56", "57", "58", "59", "60", "61", "62", "63", "67", "68", "69", "610", "73", "77", "78", "79", "710", "711", "83", "87", "88", "89", "812", "91", "92", "911", "912", "103", "104", "106", "107", "108", "109", "1010", "113", "114", "116", "117", "118", "119", "1110", "125"]
 book_num = random.randint(1, 100)
 action = None
@@ -23,7 +24,7 @@ by = 0
 newby = 0
 room = "lobby"
 combat_state = False
-inventory = [0]
+inventory = []
 inv_size = 3
 health = 10
 statue_health = 10
@@ -208,9 +209,12 @@ def zero_five_interact(obj_interact):
             print("You pick up the key.")
             time.sleep(n)
             add_inventory("key")
-            restricted_pos.remove("54")
-            restricted_pos.remove("55")
-            restricted_pos.remove("56")
+            try:
+                restricted_pos.remove("54")
+                restricted_pos.remove("55")
+                restricted_pos.remove("56")
+            except Exception:
+                pass
         else:
             print("You have already picked up the key.")
     elif obj_interact == "wall":
@@ -229,6 +233,12 @@ def zero_five_interact(obj_interact):
     else:
         print("You can't interact with that.")
         time.sleep(n)
+
+def key_use():
+    print("The key does nothing.")
+    time.sleep(n)
+    print("But it feels like if you kept it, it would keep something open.")
+    time.sleep(n)
 
 
 
@@ -2520,8 +2530,10 @@ def use_navigation(item, room):
         b_awater_use()
     elif item == "moth jelly":
         b_mjelly_use()
-    else:
+    elif backrooms_state == True:
         eval(f'b_{item}_use()')
+    else:
+        eval(f'{item}_use()')
     """
     if item == "book":
         book_use(room)
