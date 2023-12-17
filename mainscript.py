@@ -2480,6 +2480,7 @@ def inventory_general():
             drop_item(item)
 
 def add_inventory(item):
+    global inventory
     if len(inventory) == inv_size:
         print("You cannot add this item, as you haven't enough inventory space.")
         time.sleep(1)
@@ -2524,7 +2525,7 @@ def use_navigation(item, room):
         fish_book_use(room)
     elif item == "wall lore book":
         wall_book_use(room)
-    elif item == "note" or item == "apple" or item == "screen" or item == "button":
+    elif item == "note" or item == "apple" or item == "screen" or item == "button" or item == "key":
         eval(f'{item}_use()')
     elif item == "almond water":
         b_awater_use()
@@ -2532,8 +2533,6 @@ def use_navigation(item, room):
         b_mjelly_use()
     elif backrooms_state == True:
         eval(f'b_{item}_use()')
-    else:
-        eval(f'{item}_use()')
     """
     if item == "book":
         book_use(room)
